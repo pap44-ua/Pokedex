@@ -1,0 +1,3 @@
+Implementada la persistencia del API con base de datos, en Sqlite, con nombre pokemon.db.
+Implementado el testing automatico con postman en el archivo Tests.postman_collection.json y su enviroment NewEnvironment.postman_environment.json
+Implementado el paginado con offset en el filtrado de pokemon, en el archivo controladores.js, asociado a la ruta /pokemon/tipo/:tipo.
