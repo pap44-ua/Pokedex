@@ -1,12 +1,17 @@
+
 <template>
-    <div id="app">
+  <div id="app">
+    <Sidebar /> 
+
+    <div class="main-content">
+      
       <h1>APIDEX</h1>
-      <div class="admin-login-btn" @click="mostrarFormularioLogin">Admin Login</div>
+      <button v-if="!isLoggedIn" @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
       <div>
-      <label for="tipoFiltro">Filtrar por tipo:</label>
-      <input type="text" v-model="tipoFiltro" id="tipoFiltro" />
-      <button @click="aplicarFiltro">Aplicar Filtro</button>
-    </div>
+        <label for="tipoFiltro">Filtrar por tipo:</label>
+        <input type="text" v-model="tipoFiltro" id="tipoFiltro" />
+        <button @click="aplicarFiltro">Aplicar Filtro</button>
+      </div>
       <div v-if="pokemonAleatorio">
         <h2>{{ pokemonAleatorio.nombre }}</h2>
         <ul>
@@ -21,15 +26,24 @@
           <li><strong>Tipo 2 (tipo):</strong> {{ pokemonAleatorio.tipo2 }}</li>
           <li><strong>Nº pokedex de evolucion (evolucion):</strong> {{ pokemonAleatorio.evolucion }}</li>
           <li><strong>Nº de las habilidades (habilidad):</strong> {{ pokemonAleatorio.habilidad }}</li>
-          <!-- Agrega más propiedades según sea necesario -->
         </ul>
+          <!-- Agrega más propiedades según sea necesario -->
+        <!-- Contenido de Pokemon -->
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   <script>
   import apiClient from '@/axios'; // Ajusta la ruta según la ubicación de tu archivo axios.js
-  
+  import Sidebar from './SideBar.vue';
+
+
   export default {
+    components: {
+    Sidebar,
+    
+  },
     data() {
       return {
         pokemonAleatorio: null,
@@ -46,19 +60,27 @@
           console.error('Error al obtener el Pokémon aleatorio:', error);
         }
       },
+      redirectToLogIn() {
+      // Usar this.$router para navegar a la ruta LogIn
+      this.$router.push('/login');
+    },
     },
   };
   </script>
   
   <style scoped>
-  #app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-    height: 100vh; /* Esto asegura que ocupe el 100% de la altura visible del dispositivo */
-    }
+#app {
+  display: flex;
+  height: 100vh;
+}
 
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Alinea los elementos a la izquierda */
+  margin-left: 20px; /* Margen izquierdo para separar de la barra lateral */
+}
     .admin-login-btn {
   position: absolute;
   top: 10px;

@@ -47,7 +47,7 @@ app.put('/pokemon/actualizar/:nombreOId', actualizarPokemon);
 // Ruta para borrar un Pokémon 
 app.delete('/pokemon/borrar/:nombreOId', borrarPokemon);
 
-
+const ip = '10.0.2.15'
 app.listen(port, () => {
-  console.log(`Servidor en ejecución en el puerto ${port}`);
+  console.log(`Servidor en ejecución en el puerto ${port} y ip ${ip}`);
 });
