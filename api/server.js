@@ -17,6 +17,7 @@ const {
   crearPokemon,
   actualizarPokemon,
   borrarPokemon,
+  obtenerTodosLosPokemons
 } = require('./controladores');
 
 
@@ -25,6 +26,9 @@ app.get('/pokemon/buscar/:nombreOId', buscarPokemon);
 
 // Ruta para obtener un Pokémon aleatorio
 app.get('/pokemon/random', obtenerPokemonAleatorio);
+
+//Ruta para obtener todos los pokemons
+app.get('/pokemon', obtenerTodosLosPokemons);
 
 // Ruta para obtener detalles de evolución de un Pokémon específico
 app.get('/pokemon/:nombreOId/evolucion', detallesEvolucion);
@@ -48,6 +52,6 @@ app.put('/pokemon/actualizar/:nombreOId', actualizarPokemon);
 app.delete('/pokemon/borrar/:nombreOId', borrarPokemon);
 
 const ip = '10.0.2.15'
-app.listen(port, () => {
+app.listen(port,ip, () => {
   console.log(`Servidor en ejecución en el puerto ${port} y ip ${ip}`);
 });
