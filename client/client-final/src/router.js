@@ -19,4 +19,16 @@ const router = new VueRouter({
   mode: 'hash',
 });
 
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  const requiereAutenticacion = to.matched.some(route => route.meta.requiereAutenticacion);
+
+  if (requiereAutenticacion && !token) {
+    // El usuario no está autenticado y trata de acceder a una ruta que requiere autenticación, redirige a la página de inicio de sesión.
+    next('/iniciar-sesion');
+  } else {
+    next();
+  }
+});
+
 export default router;
