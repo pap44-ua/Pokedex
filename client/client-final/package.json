@@ -10,17 +10,19 @@
   "dependencies": {
     "axios": "^1.6.2",
     "core-js": "^3.8.3",
-<<<<<<< HEAD
     "crypto-browserify": "^3.12.0",
     "jsonwebtoken": "^9.0.2",
     "pinia": "^2.1.7",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.5",
     "vue": "^3.0.0",
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
     "vue": "^2.6.14",
 >>>>>>> parent of adb1e0d (va mas siuuu)
+=======
+>>>>>>> parent of c363f78 (jdfsgdf)
     "vue-router": "^2.8.1"
 =======
     "vue-router": "^4.2.5",

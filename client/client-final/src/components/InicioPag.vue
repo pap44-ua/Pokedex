@@ -11,6 +11,7 @@
       <h1>APIDEX</h1>
 <<<<<<< Updated upstream
       <button v-if="!isLoggedIn" @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
+<<<<<<< HEAD
       <div>
         <div v-if="pokemonAleatorio">
 =======
@@ -18,7 +19,13 @@
       <div class="main-content">
         <div v-if="pokemonAleatorio" class="main-content">
 >>>>>>> Stashed changes
+=======
+      <div class="main-content">
+        <div v-if="pokemonAleatorio" class="main-content">
+>>>>>>> parent of c363f78 (jdfsgdf)
         <h2>{{ pokemonAleatorio.nombre }}</h2>
+        <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemonAleatorio.nombre.toLowerCase() + '.gif'" />
+
         <ul>
           <li><strong>Número de Pokédex:</strong> {{ pokemonAleatorio.numeroPokedex }}</li>
           <li><strong>Puntos de Salud (PS):</strong> {{ pokemonAleatorio.pS }}</li>
@@ -32,8 +39,7 @@
           <li><strong>Nº pokedex de evolucion (evolucion):</strong> {{ pokemonAleatorio.evolucion }}</li>
           <li><strong>Nº de las habilidades (habilidad):</strong> {{ pokemonAleatorio.habilidad }}</li>
         </ul>
-          <!-- Agrega más propiedades según sea necesario -->
-        <!-- Contenido de Pokemon -->
+     
       </div>
        
       </div>
@@ -65,7 +71,7 @@ export default {
     }
   },
     redirectToLogIn() {
-      this.$router.push('/login');
+      this.$router.push('/iniciar-sesion');
     },
   },
 };
@@ -109,4 +115,6 @@ export default {
   border: none;
   border-radius: 5px;
 }
+
+
 </style>

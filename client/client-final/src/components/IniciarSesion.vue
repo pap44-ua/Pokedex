@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div>
     <h2>Iniciar Sesión</h2>
     <form @submit.prevent="handleLogin">
@@ -54,23 +53,3 @@ export default {
   },
 };
 </script>
-=======
-    <!-- Contenido HTML del componente -->
-    <div>
-      <h1>Iniciar Sesión</h1>
-      <!-- Otros elementos aquí... -->
-    </div>
-  </template>
-  
-  <script>
-  // Lógica JavaScript del componente
-  export default {
-    // Propiedades, métodos, etc.
-  }
-  </script>
-  
-  <style>
-  /* Estilos del componente */
-  </style>
-  
->>>>>>> parent of adb1e0d (va mas siuuu)
