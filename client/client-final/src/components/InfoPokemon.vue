@@ -16,12 +16,14 @@
     },
     created() {
       const id = this.$route.params.id; // Obtener el ID desde los parámetros de la ruta
+      console.log('ID del Pokémon:', id);
       this.obtenerInfoPokemon(id);
     },
     methods: {
       async obtenerInfoPokemon(id) {
         try {
           const response = await api.get(`/pokemon/buscar/${id}`);
+          console.log('Respuesta de la API:', response.data);
           this.pokemon = response.data;
         } catch (error) {
           console.error('Error al obtener información del Pokémon:', error);

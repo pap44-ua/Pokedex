@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
+
 import InicioPag from './components/InicioPag.vue';
 import IniciarSesion from './components/IniciarSesion.vue';
 import ListarPokemons from './components/ListarPokemons.vue';
 import InfoPokemon from './components/InfoPokemon.vue';
-
-Vue.use(VueRouter);
 
 const routes = [
   { path: '/', component: InicioPag },
@@ -14,9 +12,15 @@ const routes = [
   { path: '/info-pokemon/:id', name: 'info-pokemon', component: InfoPokemon },
 ];
 
-const router = new VueRouter({
+const router = createRouter({
+  history: createWebHistory(),
   routes,
   mode: 'hash',
 });
 
+<<<<<<< Updated upstream
 export default router;
+=======
+export default routes; // Exporta solo las rutas
+export { router }; // También exporta el router si es necesario en otro lugar
+>>>>>>> Stashed changes

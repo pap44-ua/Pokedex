@@ -1,17 +1,23 @@
 <template>
   <div id="app">
-    <Sidebar /> 
+    
 
     <div class="main-content">
       <nav class="navbar">
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
       </nav>
-
+      <button class="login-btn" @click="redirectToLogIn">Iniciar Sesión</button>
       <h1>APIDEX</h1>
+<<<<<<< Updated upstream
       <button v-if="!isLoggedIn" @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
       <div>
         <div v-if="pokemonAleatorio">
+=======
+      
+      <div class="main-content">
+        <div v-if="pokemonAleatorio" class="main-content">
+>>>>>>> Stashed changes
         <h2>{{ pokemonAleatorio.nombre }}</h2>
         <ul>
           <li><strong>Número de Pokédex:</strong> {{ pokemonAleatorio.numeroPokedex }}</li>
@@ -29,7 +35,7 @@
           <!-- Agrega más propiedades según sea necesario -->
         <!-- Contenido de Pokemon -->
       </div>
-        <div v-if="error">{{ error }}</div>
+       
       </div>
     </div>
   </div>

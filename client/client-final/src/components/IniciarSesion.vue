@@ -17,6 +17,7 @@
 
 <script>
 import { useAuthStore } from '../stores/auth';
+import { useRouter } from 'vue-router';
 
 export default {
   data() {
@@ -25,21 +26,30 @@ export default {
       password: '',
     };
   },
+  setup() {
+    const authStore = useAuthStore();
+    const router = useRouter();
+
+    const handleLogin = async () => {
+  try {
+    await authStore.login(this.username, this.password);
+    // Después de iniciar sesión, redirige al usuario a la página de inicio
+    router.push('/');
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+  }
+};
+
+
+
+    return { authStore, handleLogin };
+  },
   computed: {
     isLoading() {
-      return useAuthStore.$state.isLoading;
+      return this.authStore.$state.isLoading;
     },
     error() {
-      return useAuthStore.$state.error;
-    },
-  },
-  methods: {
-    async handleLogin() {
-      await useAuthStore.login(this.username, this.password);
-      if (useAuthStore.$state.isAuthenticated) {
-        // Redirige a la página principal o realiza acciones post inicio de sesión
-        this.$router.push('/dashboard');
-      }
+      return this.authStore.$state.error;
     },
   },
 };
