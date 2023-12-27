@@ -24,8 +24,12 @@
 
 <script>
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
+=======
+import axios from 'axios';
+>>>>>>> parent of c290559 (ns si va)
 =======
 import axios from 'axios';
 >>>>>>> parent of c290559 (ns si va)
@@ -38,6 +42,7 @@ export default {
       errorMensaje: ''
     };
   },
+<<<<<<< HEAD
 <<<<<<< HEAD
   setup() {
     const authStore = useAuthStore();
@@ -66,6 +71,8 @@ export default {
     },
   },
 =======
+=======
+>>>>>>> parent of c290559 (ns si va)
   methods: {
     async iniciarSesion() {
       try {
@@ -96,6 +103,9 @@ export default {
       }
     }
   }
+<<<<<<< HEAD
+>>>>>>> parent of c290559 (ns si va)
+=======
 >>>>>>> parent of c290559 (ns si va)
 };
 </script>
