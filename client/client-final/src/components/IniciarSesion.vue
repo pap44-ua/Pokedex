@@ -1,71 +1,45 @@
 <template>
   <div>
-    <h1>Iniciar Sesión</h1>
-    <form @submit.prevent="iniciarSesion">
-      <div>
-        <label for="usuario">Nombre de Usuario:</label>
-        <input type="text" id="usuario" v-model="usuario" required>
-      </div>
-      <div>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="password" required>
-      </div>
-      <div>
-        <button type="submit">Iniciar Sesión</button>
-      </div>
-    </form>
+    <h2>Iniciar Sesión</h2>
+    <form @submit.prevent="handleLogin">
+      <label for="username">Usuario:</label>
+      <input v-model="username" type="text" required />
 
-    <!-- Mostrar mensaje de error -->
-    <div v-if="errorMensaje" style="color: red;">
-      {{ errorMensaje }}
-    </div>
+      <label for="password">Contraseña:</label>
+      <input v-model="password" type="password" required />
+
+      <button type="submit" :disabled="isLoading">Iniciar Sesión</button>
+      <p v-if="error" style="color: red;">{{ error }}</p>
+    </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { useAuthStore } from '../stores/auth';
 
 export default {
   data() {
     return {
-      usuario: '',
+      username: '',
       password: '',
-      errorMensaje: ''
     };
   },
+  computed: {
+    isLoading() {
+      return useAuthStore.$state.isLoading;
+    },
+    error() {
+      return useAuthStore.$state.error;
+    },
+  },
   methods: {
-    async iniciarSesion() {
-      try {
-        // Realizar la solicitud de inicio de sesión
-        const response = await axios.post('/moderador/login', {
-          Usuario: this.usuario,
-          Contrasena: this.password
-        });
-
-        // Verificar si se recibió un token en la respuesta
-        const token = response.data.token;
-        if (token) {
-          // Almacenar el token en el almacenamiento local (puedes usar cookies o Vuex si es necesario)
-          localStorage.setItem('jwtToken', token);
-
-          // Redirigir a la ruta '/' después de un inicio de sesión exitoso
-          this.$router.push('/');
-        } else {
-          // Manejar el caso en el que no se reciba un token
-          this.errorMensaje = 'El servidor no proporcionó un token válido';
-        }
-      } catch (error) {
-        // Manejar errores de la solicitud aquí
-        console.error('Error en la solicitud:', error.response.data);
-
-        // Mostrar el mensaje de error del servidor si está disponible
-        this.errorMensaje = error.response.data.error || 'Credenciales incorrectas';
+    async handleLogin() {
+      await useAuthStore.login(this.username, this.password);
+      if (useAuthStore.$state.isAuthenticated) {
+        // Redirige a la página principal o realiza acciones post inicio de sesión
+        this.$router.push('/dashboard');
       }
-    }
-  }
+    },
+  },
 };
 </script>
-
-<style>
-/* Estilos del componente */
-</style>
