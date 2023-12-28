@@ -1,11 +1,9 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router';
-
-Vue.config.productionTip = false;
+import router from './router'; // Asegúrate de que el nombre del archivo del enrutador sea correcto
 
 new Vue({
   el: '#app',
-  router,
-  render: (h) => h(App),
+  router, // Asegúrate de que el nombre de la variable del enrutador sea correcto
+  render: h => h(App)
 });
