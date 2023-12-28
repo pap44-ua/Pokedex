@@ -6,6 +6,8 @@ import IniciarSesion from './components/IniciarSesion.vue';
 import ListarPokemons from './components/ListarPokemons.vue';
 import InfoPokemon from './components/InfoPokemon.vue';
 
+
+
 Vue.use(VueRouter);
 
 const routes = [
