@@ -89,7 +89,7 @@ export default {
 
 .pokemon-grid img {
   object-fit: cover;
-  max-width: 100%; /* Asegura que la imagen no se extienda más allá del ancho del contenedor */
-  max-height: 100%; /* Asegura que la imagen no se extienda más allá de la altura del contenedor */
+  max-width: 100%; 
+  max-height: 100%; 
 }
 </style>

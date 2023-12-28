@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Sidebar /> 
+   
 
     <div class="main-content">
       <nav class="navbar">
@@ -9,7 +9,7 @@
       </nav>
 
       <h1>APIDEX</h1>
-      <button v-if="!isLoggedIn" @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
+      <button @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
       <div class="main-content">
         <div v-if="pokemonAleatorio" class="main-content">
         <h2>{{ pokemonAleatorio.nombre }}</h2>
@@ -30,7 +30,7 @@
         </ul>
      
       </div>
-        <div v-if="error">{{ error }}</div>
+
       </div>
     </div>
   </div>

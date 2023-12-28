@@ -15,7 +15,6 @@
       </div>
     </form>
 
-    <!-- Mostrar mensaje de error -->
     <div v-if="errorMensaje" style="color: red;">
       {{ errorMensaje }}
     </div>
@@ -24,6 +23,7 @@
 
 <script>
 import axios from 'axios';
+import { useUserStore } from '../stores/UserStore';
 
 export default {
   data() {
@@ -34,38 +34,40 @@ export default {
     };
   },
   methods: {
-    async iniciarSesion() {
-      try {
-        // Realizar la solicitud de inicio de sesión
-        const response = await axios.post('/moderador/login', {
-          Usuario: this.usuario,
-          Contrasena: this.password
-        });
+    iniciarSesion() {
 
-        // Verificar si se recibió un token en la respuesta
-        const token = response.data.token;
-        if (token) {
-          // Almacenar el token en el almacenamiento local (puedes usar cookies o Vuex si es necesario)
-          localStorage.setItem('jwtToken', token);
+      axios.post('http://192.168.1.105:3000/moderador/login', {
+        Usuario: this.usuario,
+        Contrasena: this.password
+      })
+      .then(() => {
 
-          // Redirigir a la ruta '/' después de un inicio de sesión exitoso
-          this.$router.push('/');
+        const userStore = useUserStore();
+        userStore.loginUser({ user: this.usuario, password: this.password });
+
+        //localStorage.setItem('token', response.data.token);
+
+        this.$router.push('/');
+      })
+      .catch((error) => {
+        if (error.response) {
+    
+          console.error('Respuesta del servidor con error:', error.response.data);
+          this.errorMensaje = error.response.data.mensaje;
+        } else if (error.request) {
+
+          console.error('No se recibió respuesta del servidor');
         } else {
-          // Manejar el caso en el que no se reciba un token
-          this.errorMensaje = 'El servidor no proporcionó un token válido';
-        }
-      } catch (error) {
-        // Manejar errores de la solicitud aquí
-        console.error('Error en la solicitud:', error.response.data);
 
-        // Mostrar el mensaje de error del servidor si está disponible
-        this.errorMensaje = error.response.data.error || 'Credenciales incorrectas';
-      }
+          console.error('Error al configurar la solicitud:', error.message);
+        }
+      });
     }
   }
 };
 </script>
 
+
 <style>
-/* Estilos del componente */
+
 </style>

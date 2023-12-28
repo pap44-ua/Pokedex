@@ -33,7 +33,7 @@
       };
     },
     created() {
-      const id = this.$route.params.id; // Obtener el ID desde los parámetros de la ruta
+      const id = this.$route.params.id; 
       this.obtenerInfoPokemon(id);
     },
     methods: {
