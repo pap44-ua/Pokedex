@@ -6,6 +6,14 @@
       <nav class="navbar">
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
+
+        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+        <span v-if="!loggedIn">
+          <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
+        </span>
+        <span v-if="loggedIn"> 
+          <router-link to="/ver-perfil">{{ username }}</router-link>
+        </span>
       </nav>
 
       <h1>APIDEX</h1>
@@ -38,6 +46,7 @@
 
 <script>
 import api from '../services/api';
+import { useUserStore } from '../stores/UserStore';
 
 export default {
   data() {
@@ -47,6 +56,14 @@ export default {
   },
   created() {
     this.obtenerPokemonAleatorio();
+  },
+  computed: {
+    loggedIn() {
+      return useUserStore().user !== null;
+    },
+    username() {
+      return useUserStore().user;
+    },
   },
   methods: {
     async obtenerPokemonAleatorio() {

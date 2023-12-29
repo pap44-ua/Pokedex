@@ -3,6 +3,14 @@
       <nav class="navbar">
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
+
+        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+        <span v-if="!loggedIn">
+          <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
+        </span>
+        <span v-if="loggedIn"> 
+          <router-link to="/ver-perfil">{{ username }}</router-link>
+        </span>
       </nav>
       <h1>{{ pokemon.nombre }}</h1>
       <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
@@ -25,6 +33,7 @@
   
   <script>
   import api from '../services/api';
+  import { useUserStore } from '../stores/UserStore';
   
   export default {
     data() {
@@ -36,6 +45,14 @@
       const id = this.$route.params.id; 
       this.obtenerInfoPokemon(id);
     },
+    computed: {
+    loggedIn() {
+      return useUserStore().user !== null;
+    },
+    username() {
+      return useUserStore().user;
+    },
+  },
     methods: {
       async obtenerInfoPokemon(id) {
         try {
