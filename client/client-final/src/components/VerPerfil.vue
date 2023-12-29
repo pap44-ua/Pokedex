@@ -1,5 +1,17 @@
 <template>
-    <div>
+    <div class="main-content">
+        <nav class="navbar">
+        <router-link to="/">Inicio</router-link>
+        <router-link to="/listar-pokemons">Listar Pokémons</router-link>
+
+        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+        <span v-if="!loggedIn">
+          <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
+        </span>
+        <span v-if="loggedIn"> 
+          <router-link to="/ver-perfil">{{ username }}</router-link>
+        </span>
+      </nav>
       <h1>Perfil del Moderador</h1>
       <div v-if="profileData">
         <p><strong>Usuario:</strong> {{ profileData.Usuario }}</p>
@@ -28,6 +40,14 @@
         console.log('Nombre de usuario:', username);
       // Hacer la llamada a la API para obtener el perfil del moderador
       this.fetchModeratorProfile(username);
+    },
+    computed: {
+        loggedIn() {
+        return useUserStore().user !== null;
+        },
+        username() {
+        return useUserStore().user;
+        },
     },
     methods: {
         async fetchModeratorProfile(username) {
