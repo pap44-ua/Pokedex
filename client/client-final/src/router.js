@@ -6,6 +6,7 @@ import IniciarSesion from './components/IniciarSesion.vue';
 import ListarPokemons from './components/ListarPokemons.vue';
 import InfoPokemon from './components/InfoPokemon.vue';
 import VerPerfil from './components/VerPerfil.vue';
+import EditarPok from './components/EditarPokemon.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,7 @@ const routes = [
   { path: '/listar-pokemons', component: ListarPokemons },
   { path: '/info-pokemon/:id', name: 'info-pokemon', component: InfoPokemon },
   { path: '/ver-perfil', component: VerPerfil },
+  { path: '/editar-pokemon/:id',name:'editar-pokemon', component: EditarPok },
 ];
 
 const router = new VueRouter({

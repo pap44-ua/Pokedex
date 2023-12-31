@@ -20,10 +20,9 @@
 
     </div>
 
-      <h1 v-if="pokemon">{{ pokemon.nombre }}</h1>
-      <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
-
-      <ul v-if="pokemon">
+    <h1 v-if="pokemon && pokemon.nombre">{{ pokemon.nombre }}</h1>
+<img v-if="pokemon" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
+<ul v-if="pokemon">
           <li><strong>Número de Pokédex:</strong> {{ pokemon.numeroPokedex }}</li>
           <li><strong>Puntos de Salud (PS):</strong> {{ pokemon.pS }}</li>
           <li><strong>Ataque (ATK):</strong> {{ pokemon.atk }}</li>
@@ -99,12 +98,17 @@
       },
       async editarPokemon() {
         try {
-          this.$router.push('editar-pokemon');
+          // Obtén el ID del Pokémon desde la información actual del Pokémon
+          const id = this.pokemon.numeroPokedex;
+
+          // Redirige al usuario a la ruta de edición
+          this.$router.push({ name: 'editar-pokemon', params: { id } });
         } catch (error) {
           console.error('Error al editar el Pokémon:', error);
           // Manejar el error, mostrar un mensaje, etc.
         }
       },
+
     },
   };
   </script>

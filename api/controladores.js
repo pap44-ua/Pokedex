@@ -257,12 +257,13 @@ function crearPokemon(req, res) {
   console.log(nuevoPokemon);
 
   const sql = `
-      INSERT INTO pokemon (nombre, pS, atk, def, SpAtk, SpDef, Spe, tipo1, tipo2, evolucion, descripcion, habilidad)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+      INSERT INTO pokemon (nombre, numeroPokedex, pS, atk, def, SpAtk, SpDef, Spe, tipo1, tipo2, evolucion, descripcion, habilidad)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
   const values = [
     nuevoPokemon.nombre,
+    nuevoPokemon.numeroPokedex,
     nuevoPokemon.pS,
     nuevoPokemon.atk,
     nuevoPokemon.def,
@@ -275,6 +276,7 @@ function crearPokemon(req, res) {
     nuevoPokemon.descripcion,
     nuevoPokemon.habilidad
   ];
+
   console.log(values);
 
   db.run(sql, values, function (err) {
@@ -307,26 +309,30 @@ function actualizarPokemon(req, res) {
   if (isNaN(numeroPokedex)) {
     return res.status(400).json({ error: 'Número de Pokédex no válido' });
   }
+
   const datosActualizados = req.body;
   const sql = `
       UPDATE pokemon
-      SET nombre = ?,
-          pS = ?,
-          atk = ?,
-          def = ?,
-          SpAtk = ?,
-          SpDef = ?,
-          Spe = ?,
-          tipo1 = ?,
-          tipo2 = ?,
-          evolucion = ?,
-          descripcion = ?,
-          habilidad = ?
+      SET
+        nombre = ?,
+        numeroPokedex = ?,  -- Agregado para actualizar el número de Pokédex
+        pS = ?,
+        atk = ?,
+        def = ?,
+        SpAtk = ?,
+        SpDef = ?,
+        Spe = ?,
+        tipo1 = ?,
+        tipo2 = ?,
+        evolucion = ?,
+        descripcion = ?,
+        habilidad = ?
       WHERE numeroPokedex = ?;
     `;
 
   const values = [
     datosActualizados.nombre,
+    datosActualizados.numeroPokedex,  // Asegúrate de pasar el nuevo número de Pokédex desde el front-end
     datosActualizados.pS,
     datosActualizados.atk,
     datosActualizados.def,
@@ -340,8 +346,10 @@ function actualizarPokemon(req, res) {
     datosActualizados.habilidad,
     numeroPokedex
   ];
+
   console.log(numeroPokedex);
   console.log(values);
+
   db.run(sql, values, function (err) {
     if (err) {
       console.error(err.message);
@@ -351,6 +359,7 @@ function actualizarPokemon(req, res) {
     res.status(200).json({ message: 'Pokémon actualizado con éxito' });
   });
 }
+
 
 function borrarPokemon(req, res) {
   const token = req.headers.authorization;
