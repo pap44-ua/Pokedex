@@ -4,7 +4,7 @@
       <router-link to="/">Inicio</router-link>
       <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-      <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+      
       <span v-if="!loggedIn">
         <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
       </span>
@@ -29,7 +29,9 @@
           <input type="password" id="password" v-model="password" required>
         </div>
         <div class="separar">
-          <button type="submit">Iniciar Sesión</button>
+          <div class="separar">
+            <button type="submit" class="animated-button" @click="iniciarSesion">Iniciar Sesión</button>
+          </div>
         </div>
       </form>
 
@@ -104,6 +106,28 @@ export default {
 
 
 <style>
+.animated-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-button::before {
+  content: "";
+  position: absolute;
+  background: linear-gradient(90deg, #1c74f1, #f12711, #ffcc00);
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: left 0.4s;
+}
+
+.animated-button:hover::before {
+  left: 100%;
+}
+
+
 .container {
   display: flex;
   flex-direction: column;

@@ -19,9 +19,13 @@
 
       <div class="search-container">
         <input v-model="searchTerm" placeholder="Buscar por nombre o ID">
-        <button @click="buscarPokemon">Buscar</button>
+        <div class="separar">
+            <button type="submit" class="animated-button" @click="buscarPokemon">Buscar Pokemon</button>
+          </div>
         <div class="dropdown">
-        <button @click="mostrarTipos">Mostrar Tipos</button>
+          <div class="separar">
+            <button type="submit" class="animated-button" @click="mostrarTipos">Tipos</button>
+          </div>
         <div v-show="tipos.length > 0" class="dropdown-content">
           <button v-for="tipo in tipos" :key="tipo" @click="filtrarPorTipo(tipo)">{{ tipo }}</button>
         </div>
@@ -31,7 +35,8 @@
 
     <h1 class="main-content">Pokemons</h1>
     <div class="pokemon-grid">
-      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon($event, pokemon)">
+      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon($event, pokemon)" @mouseover="mostrarDetallesPokemon(pokemon)"
+     @mouseleave="restablecerDetallesPokemon">
         <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
 
         <p>{{ pokemon.numeroPokedex }}</p>
@@ -41,13 +46,30 @@
           <button @click="editarPokemon(pokemon)">Editar</button>
           <button @click="borrarPokemon(pokemon)">Borrar</button>
         </div>
+        <div v-if="pokemonDetail" class="modal">
+          <p>PS: {{ pokemonDetail.pS }}</p>
+          <p>ATK: {{ pokemonDetail.atk }}</p>
+          <p>DEF: {{ pokemonDetail.def }}</p>
+          <p>SpAtk: {{ pokemonDetail.SpAtk }}</p>
+          <p>SpDef: {{ pokemonDetail.SpDef }}</p>
+          <p>Spe: {{ pokemonDetail.Spe }}</p>
+          <p>Tipo 1: {{ pokemonDetail.tipo1 }}</p>
+          <p>Tipo 2: {{ pokemonDetail.tipo2 }}</p>
+          <p>Evolucion: {{ pokemonDetail.evolucion }}</p>
+          <p>Habilidad: {{ pokemonDetail.habilidad }}</p>
+  
+        </div>
       </div>
     </div>
     <div class="pagination">
   <button @click="filtrarPorTipo(tipo, currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
   <span>{{ currentPage }}</span>
   <button @click="filtrarPorTipo(tipo, currentPage + 1)" :disabled="currentPage === totalPages">Siguiente</button>
+
+
 </div>
+
+
   </div>
 
 </template>
@@ -65,6 +87,7 @@ export default {
       tipos: [],
       currentPage: 1,
     totalPages: 1,
+    pokemonDetail: null,
     };
   },
   created() {
@@ -79,6 +102,14 @@ export default {
     },
   },
   methods: {
+      mostrarDetallesPokemon(pokemon) {
+      this.pokemonDetail = pokemon;
+    },
+
+    restablecerDetallesPokemon() {
+      this.pokemonDetail = null;
+    },
+
     redirigirAInfoPokemon(event, pokemon) {
     // Verificar si el clic provino de la imagen
     if (event.target.tagName.toLowerCase() === 'img') {
@@ -282,4 +313,17 @@ export default {
   max-width: 100%; 
   max-height: 100%; 
 }
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+}
+
 </style>

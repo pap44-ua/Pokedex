@@ -25,7 +25,7 @@
     </div>
 
     <h1 v-if="pokemon && pokemon.nombre">{{ pokemon.nombre }}</h1>
-    <img v-if="pokemon" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
+    <img v-if="pokemon && pokemon.nombre" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
     <ul v-if="pokemon">
           <li><strong>Número de Pokédex:</strong> {{ pokemon.numeroPokedex }}</li>
           <li><strong>Puntos de Salud (PS):</strong> {{ pokemon.pS }}</li>
@@ -36,9 +36,31 @@
           <li><strong>Velocidad (Spe):</strong> {{ pokemon.Spe }}</li>
           <li><strong>Tipo 1 (tipo1):</strong> {{ pokemon.tipo1 }}</li>
           <li><strong>Tipo 2 (tipo):</strong> {{ pokemon.tipo2 }}</li>
-          <li><strong>Nº pokedex de evolucion (evolucion):</strong> {{ pokemon.evolucion }}</li>
+          <li @mouseover="mostrarInfoEvolucion" @mouseleave="ocultarInfoEvolucion">
+            <strong>Nº pokedex de evolucion (evolucion):</strong> 
+            <span
+              :class="{ 'evolution-link': showEvolutionModal }"
+            >
+              {{ pokemon.evolucion }}
+            </span>
+          </li>
           <li><strong>Nº de las habilidades (habilidad):</strong> {{ pokemon.habilidad }}</li>
         </ul>
+
+        <div v-if="showEvolutionModal" class="evolution-modal">
+          <img v-if="evolutionInfo && evolutionInfo.nombre" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + evolutionInfo.nombre.toLowerCase() + '.gif'" />
+          <h2><strong>Número de Pokédex:</strong>{{ evolutionInfo.nombre }}</h2>
+          <h2><strong>Puntos de Salud (PS):</strong>{{ evolutionInfo.numeroPokedex }}</h2>
+          <h2><strong>Ataque (ATK):</strong>{{ evolutionInfo.atk }}</h2>
+          <h2><strong>Defensa (DEF):</strong>{{ evolutionInfo.def }}</h2>
+          <h2><strong>Ataque Especial (SpAtk):</strong>{{ evolutionInfo.SpAtk }}</h2>
+          <h2><strong> Defensa Especial (SpDef):</strong>{{ evolutionInfo.SpDef }}</h2>
+          <h2><strong> Defensa Especial (SpDef):</strong>{{ evolutionInfo.SpDef }}</h2>
+          <h2><strong>Velocidad (Spe):</strong> {{ evolutionInfo.Spe }}</h2>
+          <h2><strong>Tipo 1 (tipo1):</strong>{{ evolutionInfo.tipo1 }}</h2>
+          <h2><strong>Tipo 2 (tipo2):</strong>{{ evolutionInfo.tipo2 }}</h2>
+        </div>
+
     </div>
   </template>
   
@@ -52,6 +74,8 @@
         pokemon: {},
         esUsuarioActual: false,
         showOptions: false,
+        showEvolutionModal: false,
+        evolutionInfo: {},
       };
       
     },
@@ -68,6 +92,28 @@
       },
     },
     methods: {
+      mostrarInfoEvolucion() {
+    // Obtener la información de la evolución del Pokémon
+    const evolutionId = this.pokemon.evolucion;
+
+  // Verificar si evolutionId es null o undefined antes de hacer la solicitud
+  if (evolutionId) {
+    this.obtenerInfoPokemonEvolucion(evolutionId);
+    this.showEvolutionModal = true;
+  }
+  },
+  ocultarInfoEvolucion() {
+    // Ocultar el modal cuando se retira el ratón
+    this.showEvolutionModal = false;
+  },
+  async obtenerInfoPokemonEvolucion(id) {
+    try {
+      const response = await api.get(`/pokemon/buscar/${id}`);
+      this.evolutionInfo = response.data;
+    } catch (error) {
+      console.error('Error al obtener información de la evolución del Pokémon:', error);
+    }
+  },
       async obtenerInfoPokemon(id) {
         try {
           const response = await api.get(`/pokemon/buscar/${id}`);
@@ -169,5 +215,23 @@
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
+}
+.evolution-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  /* Agrega estilos adicionales según tus necesidades */
+}
+.evolution-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  border: 1px solid blue; /* Agrega un borde azul */
 }
   </style>
