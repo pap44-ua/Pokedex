@@ -15,14 +15,14 @@
 
     <div v-if="loggedIn">
       <!-- Deshabilitar los botones si this.pokemon es null -->
-      <button @click="borrarPokemon" :disabled="pokemon === null">Borrar</button>
-<button @click="editarPokemon" :disabled="pokemon === null">Editar</button>
+      <button @click="borrarPokemon" :disabled="!pokemon">Borrar</button>
+      <button @click="editarPokemon" :disabled="!pokemon">Editar</button>
 
     </div>
 
     <h1 v-if="pokemon && pokemon.nombre">{{ pokemon.nombre }}</h1>
-<img v-if="pokemon" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
-<ul v-if="pokemon">
+    <img v-if="pokemon" :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
+    <ul v-if="pokemon">
           <li><strong>Número de Pokédex:</strong> {{ pokemon.numeroPokedex }}</li>
           <li><strong>Puntos de Salud (PS):</strong> {{ pokemon.pS }}</li>
           <li><strong>Ataque (ATK):</strong> {{ pokemon.atk }}</li>

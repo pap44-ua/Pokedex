@@ -17,7 +17,7 @@
       </nav>
 
       <h1>APIDEX</h1>
-      <button @click="redirectToLogIn" class="admin-login-btn">Admin Login</button>
+      
       <div class="main-content">
         <div v-if="pokemonAleatorio" class="main-content">
         <h2>{{ pokemonAleatorio.nombre }}</h2>
@@ -110,17 +110,6 @@ export default {
   font-weight: bold;
 }
 
-.admin-login-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-}
 
 
 </style>
