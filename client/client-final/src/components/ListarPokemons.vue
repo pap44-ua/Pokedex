@@ -38,7 +38,13 @@
         <p>{{ pokemon.nombre }}</p>
       </div>
     </div>
+    <div class="pagination">
+    <button @click="filtrarPorTipo(tipo, currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
+    <span>{{ currentPage }}</span>
+    <button @click="filtrarPorTipo(tipo, currentPage + 1)" :disabled="currentPage === totalPages">Siguiente</button>
   </div>
+  </div>
+
 </template>
 
 <script>
@@ -52,6 +58,8 @@ export default {
       showOptions: false,
       searchTerm: '',
       tipos: [],
+      currentPage: 1,
+    totalPages: 1,
     };
   },
   created() {
@@ -116,12 +124,12 @@ export default {
         // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
       }
     },
-    async filtrarPorTipo(tipo) {
+    async filtrarPorTipo(tipo, page = 1, perPage = 10) {
       try {
-        const response = await api.get(`/pokemon/tipo/${tipo}`);
+        const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
         
         if (response.status === 200) {
-          // Actualiza la lista de pokémons con el resultado del filtro por tipo
+          // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
           this.pokemons = response.data.pokemons;
         } else {
           console.error('Error al filtrar Pokémon por tipo:', response.data.error);
