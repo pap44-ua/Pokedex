@@ -1,17 +1,21 @@
 <template>
   <div class="main-content">
     <nav class="navbar">
-      <router-link to="/">Inicio</router-link>
-      <router-link to="/listar-pokemons">Listar Pokémons</router-link>
+        <router-link to="/">Inicio</router-link>
+        <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-      <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
-      <span v-if="!loggedIn">
-        <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
-      </span>
-      <span v-if="loggedIn"> 
-        <router-link to="/ver-perfil">{{ username }}</router-link>
-      </span>
-    </nav>
+        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+        <span v-if="!loggedIn">
+          <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
+        </span>
+        <span v-if="loggedIn" @click="showOptions = !showOptions" class="navbar-username">
+          {{ username }}
+          <div v-show="showOptions" class="options-container">
+            <router-link to="/ver-perfil">Ver perfil</router-link>
+            <span @click="logout">Cerrar sesión</span>
+          </div>
+        </span>
+      </nav>
 
     <div v-if="loggedIn">
       <!-- Deshabilitar los botones si this.pokemon es null -->
@@ -47,7 +51,9 @@
       return {
         pokemon: {},
         esUsuarioActual: false,
+        showOptions: false,
       };
+      
     },
     created() {
       const id = this.$route.params.id; 
@@ -108,6 +114,12 @@
           // Manejar el error, mostrar un mensaje, etc.
         }
       },
+      logout() {
+      useUserStore().logout();
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+      }
+    },
 
     },
   };
@@ -122,16 +134,40 @@
     margin-left: 20px;
   }
   
-  .navbar {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .navbar a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-  }
+  .navbar a,
+.navbar-username {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+.options-container a,
+.options-container span {
+  margin-bottom: 10px;
+}
+
+.navbar-username {
+  margin: 0 10px;
+  position: relative;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
   </style>

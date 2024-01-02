@@ -15,5 +15,9 @@ export const useUserStore = defineStore({
         password: credentials.password,
       });
     },
+    async logout() {
+      console.log("logout");
+      this.$reset(); // Restablecer el estado a su valor inicial
+    },
   },
 });

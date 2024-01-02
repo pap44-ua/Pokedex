@@ -1,25 +1,45 @@
 <template>
-  <div>
-    <h1>Iniciar Sesión</h1>
-    <form @submit.prevent="iniciarSesion">
-      <div>
-        <label for="usuario">Nombre de Usuario:</label>
-        <input type="text" id="usuario" v-model="usuario" required>
-      </div>
-      <div>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="password" required>
-      </div>
-      <div>
-        <button type="submit">Iniciar Sesión</button>
-      </div>
-    </form>
+  <div class="container">
+    <nav class="navbar">
+      <router-link to="/">Inicio</router-link>
+      <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-    <div v-if="errorMensaje" style="color: red;">
-      {{ errorMensaje }}
+      <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
+      <span v-if="!loggedIn">
+        <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
+      </span>
+      <span v-if="loggedIn" @click="showOptions = !showOptions" class="navbar-username">
+        {{ username }}
+        <div v-show="showOptions" class="options-container">
+          <router-link to="/ver-perfil">Ver perfil</router-link>
+          <span @click="logout">Cerrar sesión</span>
+        </div>
+      </span>
+    </nav>  
+
+    <div class="content">
+      <h1>Iniciar Sesión</h1>
+      <form @submit.prevent="iniciarSesion">
+        <div class="separar">
+          <label for="usuario">Nombre de Usuario:</label>
+          <input type="text" id="usuario" v-model="usuario" required>
+        </div>
+        <div class="separar">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" v-model="password" required>
+        </div>
+        <div class="separar">
+          <button type="submit">Iniciar Sesión</button>
+        </div>
+      </form>
+
+      <div v-if="errorMensaje" style="color: red;">
+        {{ errorMensaje }}
+      </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -30,8 +50,17 @@ export default {
     return {
       usuario: '',
       password: '',
-      errorMensaje: ''
+      errorMensaje: '',
+      showOptions: false,
     };
+  },
+  computed: {
+    loggedIn() {
+      return useUserStore().user !== null;
+    },
+    username() {
+      return useUserStore().user;
+    },
   },
   methods: {
     iniciarSesion() {
@@ -62,12 +91,72 @@ export default {
           console.error('Error al configurar la solicitud:', error.message);
         }
       });
-    }
+    },
+    logout() {
+      useUserStore().logout();
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+      }
+    },
   }
 };
 </script>
 
 
 <style>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.separar{
+  margin-top: 20px;
+  
+}
+
+.navbar a,
+.navbar-username {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.options-container a,
+.options-container span {
+  margin-bottom: 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.navbar-username {
+  margin: 0 10px;
+  position: relative;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
 </style>

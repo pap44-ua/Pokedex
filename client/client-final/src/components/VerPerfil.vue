@@ -1,6 +1,6 @@
 <template>
     <div class="main-content">
-        <nav class="navbar">
+      <nav class="navbar">
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
@@ -8,8 +8,12 @@
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>
-        <span v-if="loggedIn"> 
-          <router-link to="/ver-perfil">{{ username }}</router-link>
+        <span v-if="loggedIn" @click="showOptions = !showOptions" class="navbar-username">
+          {{ username }}
+          <div v-show="showOptions" class="options-container">
+            <router-link to="/ver-perfil">Ver perfil</router-link>
+            <span @click="logout">Cerrar sesión</span>
+          </div>
         </span>
       </nav>
       <div class="split-container">
@@ -93,6 +97,7 @@
       return {
         profileData: null,
         pokemonInfo: Array(8).fill({ nombre: '', numeroPokedex: '', pS: '',atk: '',def:'',SpAtk:'',SpDef:'',Spe:'',tipo1:'',tipo2:'',evolucion:'',habilidad:'' }),
+        showOptions: false,
       };
     },
     created() {
@@ -143,8 +148,14 @@
             console.error('Error al obtener el perfil del moderador:', error);
             this.error = 'Error al obtener datos de la API';
             }
-        },
-        },
+      },
+      logout() {
+        useUserStore().logout();
+        if (this.$route.path !== '/') {
+          this.$router.push('/');
+        }
+      },
+    },
   };
   </script>
   
@@ -177,5 +188,43 @@
     margin-bottom: 30px;
     width: auto; /* Establecer el ancho automático para evitar que se vea alargado verticalmente */
   }
+
+  .navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px; 
+}
+
+  .navbar a,
+.navbar-username {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.options-container a,
+.options-container span {
+  margin-bottom: 10px;
+}
+
+.navbar-username {
+  margin: 0 10px;
+  position: relative;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
 </style>
   

@@ -11,8 +11,12 @@
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>
-        <span v-if="loggedIn"> 
-          <router-link to="/ver-perfil">{{ username }}</router-link>
+        <span v-if="loggedIn" @click="showOptions = !showOptions" class="navbar-username">
+          {{ username }}
+          <div v-show="showOptions" class="options-container">
+            <router-link to="/ver-perfil">Ver perfil</router-link>
+            <span @click="logout">Cerrar sesión</span>
+          </div>
         </span>
       </nav>
 
@@ -52,6 +56,7 @@ export default {
   data() {
     return {
       pokemonAleatorio: null,
+      showOptions: false,
     };
   },
   created() {
@@ -67,28 +72,42 @@ export default {
   },
   methods: {
     async obtenerPokemonAleatorio() {
-    try {
-      const response = await api.get('/pokemon/random');
-      console.log('Respuesta de la API:', response);
-      this.pokemonAleatorio = response.data;
-    } catch (error) {
-      console.error('Error al obtener el Pokémon aleatorio:', error);
-      this.error = 'Error al obtener datos de la API';
-    }
-  },
+      try {
+        const response = await api.get('/pokemon/random');
+        console.log('Respuesta de la API:', response);
+        this.pokemonAleatorio = response.data;
+      } catch (error) {
+        console.error('Error al obtener el Pokémon aleatorio:', error);
+        this.error = 'Error al obtener datos de la API';
+      }
+    },
     redirectToLogIn() {
       this.$router.push('/iniciar-sesion');
+    },
+    logout() {
+      useUserStore().logout();
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+      }
     },
   },
 };
 </script>
 
+
 <style scoped>
+
 #app {
   display: flex;
   height: 100vh;
 }
 
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 .main-content {
   flex: 1;
   display: flex;
@@ -96,19 +115,39 @@ export default {
   align-items: center;
   margin-left: 20px;
 }
-
-.navbar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.navbar a {
-  margin: 0 10px;
+.navbar a,
+.navbar-username {
   text-decoration: none;
   color: #007bff;
   font-weight: bold;
+  margin-right: 10px;
 }
+
+.options-container a,
+.options-container span {
+  margin-bottom: 10px;
+}
+
+.navbar-username {
+  margin:auto ;
+  position: relative;
+  margin-right: 10px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+
 
 
 
