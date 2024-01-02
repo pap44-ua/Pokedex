@@ -430,6 +430,27 @@ function obtenerTodosLosPokemons(req, res) {
   });
 }
 
+
+function obtenerTipos(req, res) {
+  const sql = 'SELECT DISTINCT tipo1 FROM pokemon UNION SELECT DISTINCT tipo2 FROM pokemon WHERE tipo2 IS NOT NULL;';
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Error al obtener los tipos de Pokémon' });
+      return;
+    }
+
+    if (rows.length > 0) {
+      const tipos = rows.map(row => row.tipo1);
+      res.json(tipos);
+    } else {
+      res.status(404).json({ error: 'No se encontraron tipos de Pokémon' });
+    }
+  });
+}
+
+
 process.on('SIGINT', () => {
   db.close((err) => {
     if (err) {
@@ -441,6 +462,8 @@ process.on('SIGINT', () => {
   });
 });
 
+
+
 module.exports = {
   buscarPokemon,
   obtenerPokemonAleatorio,
@@ -451,6 +474,7 @@ module.exports = {
   crearPokemon,
   actualizarPokemon,
   borrarPokemon,
-  obtenerTodosLosPokemons
+  obtenerTodosLosPokemons,
+  obtenerTipos
 
 };

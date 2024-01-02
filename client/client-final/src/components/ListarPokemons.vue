@@ -20,8 +20,14 @@
       <div class="search-container">
         <input v-model="searchTerm" placeholder="Buscar por nombre o ID">
         <button @click="buscarPokemon">Buscar</button>
+        <div class="dropdown">
         <button @click="mostrarTipos">Mostrar Tipos</button>
+        <div v-show="tipos.length > 0" class="dropdown-content">
+          <button v-for="tipo in tipos" :key="tipo" @click="filtrarPorTipo(tipo)">{{ tipo }}</button>
+        </div>
       </div>
+      </div>
+
 
     <h1 class="main-content">Pokemons</h1>
     <div class="pokemon-grid">
@@ -45,6 +51,7 @@ export default {
       pokemons: [],
       showOptions: false,
       searchTerm: '',
+      tipos: [],
     };
   },
   created() {
@@ -81,27 +88,50 @@ export default {
         const response = await api.get(`/pokemon/buscar/${this.searchTerm}`);
         
         if (response.status === 200) {
-          // Actualiza la lista de pokémons con el resultado de la búsqueda
+
           this.pokemons = [response.data];
         } else {
-          // Maneja el caso en el que el servidor responde con un error
+
           console.error('Error al buscar Pokémon:', response.data.error);
-          // Puedes mostrar un mensaje al usuario si lo consideras necesario
+
         }
       } catch (error) {
         console.error('Error al realizar la búsqueda de Pokémon:', error);
-        // Puedes mostrar un mensaje al usuario si lo consideras necesario
+
       }
     },
-    async mostrarTipos()
-    {
+    async mostrarTipos() {
       try {
         const response = await api.get('/pokemon/tipos');
-        this.pokemons = response.data;
+
+        if (response.status === 200) {
+          // Almacena los tipos en la variable tipos
+          this.tipos = response.data;
+        } else {
+          console.error('Error al obtener los tipos de Pokémon:', response.data.error);
+          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+        }
       } catch (error) {
-        console.error('Error al obtener la lista de Pokémon:', error);
+        console.error('Error al obtener los tipos de Pokémon:', error);
+        // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
       }
-    }
+    },
+    async filtrarPorTipo(tipo) {
+      try {
+        const response = await api.get(`/pokemon/tipo/${tipo}`);
+        
+        if (response.status === 200) {
+          // Actualiza la lista de pokémons con el resultado del filtro por tipo
+          this.pokemons = response.data.pokemons;
+        } else {
+          console.error('Error al filtrar Pokémon por tipo:', response.data.error);
+          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+        }
+      } catch (error) {
+        console.error('Error al filtrar Pokémon por tipo:', error);
+        // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+      }
+    },
   },
 };
 </script>

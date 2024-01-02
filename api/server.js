@@ -17,7 +17,8 @@ const {
   crearPokemon,
   actualizarPokemon,
   borrarPokemon,
-  obtenerTodosLosPokemons
+  obtenerTodosLosPokemons,
+  obtenerTipos
 } = require('./controladores');
 
 
@@ -50,6 +51,10 @@ app.put('/pokemon/actualizar/:nombreOId', actualizarPokemon);
 
 // Ruta para borrar un Pokémon 
 app.delete('/pokemon/borrar/:nombreOId', borrarPokemon);
+
+// Ruta para obtener todos los tipos de Pokémon
+app.get('/pokemon/tipos', obtenerTipos);
+
 
 const ip = '192.168.1.105'
 app.listen(port,ip, () => {
