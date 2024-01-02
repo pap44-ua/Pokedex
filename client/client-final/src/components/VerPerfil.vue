@@ -81,6 +81,9 @@
           </div>
           <!-- Botón para añadir Pokémon -->
           <button class="add-button" @click="agregarPokemon">Añadir</button>
+          <div v-if="mensajeAgregado" class="success-message">
+            Pokémon agregado exitosamente.
+          </div>
         </div>
     
     </div>
@@ -98,6 +101,7 @@
         profileData: null,
         pokemonInfo: Array(8).fill({ nombre: '', numeroPokedex: '', pS: '',atk: '',def:'',SpAtk:'',SpDef:'',Spe:'',tipo1:'',tipo2:'',evolucion:'',habilidad:'' }),
         showOptions: false,
+        mensajeAgregado: false,
       };
     },
     created() {
@@ -127,7 +131,7 @@
         });
 
         console.log('Respuesta de la API al agregar Pokémon:', response.data);
-
+        this.mensajeAgregado = true;
         // Puedes manejar la respuesta de la API aquí según tus necesidades
       } catch (error) {
         console.error('Error al agregar el Pokémon:', error);

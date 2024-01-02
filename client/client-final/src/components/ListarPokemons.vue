@@ -31,18 +31,23 @@
 
     <h1 class="main-content">Pokemons</h1>
     <div class="pokemon-grid">
-      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon(pokemon)">
+      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon($event, pokemon)">
         <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
 
         <p>{{ pokemon.numeroPokedex }}</p>
         <p>{{ pokemon.nombre }}</p>
+
+        <div v-if="loggedIn">
+          <button @click="editarPokemon(pokemon)">Editar</button>
+          <button @click="borrarPokemon(pokemon)">Borrar</button>
+        </div>
       </div>
     </div>
     <div class="pagination">
-    <button @click="filtrarPorTipo(tipo, currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
-    <span>{{ currentPage }}</span>
-    <button @click="filtrarPorTipo(tipo, currentPage + 1)" :disabled="currentPage === totalPages">Siguiente</button>
-  </div>
+  <button @click="filtrarPorTipo(tipo, currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
+  <span>{{ currentPage }}</span>
+  <button @click="filtrarPorTipo(tipo, currentPage + 1)" :disabled="currentPage === totalPages">Siguiente</button>
+</div>
   </div>
 
 </template>
@@ -74,6 +79,66 @@ export default {
     },
   },
   methods: {
+    redirigirAInfoPokemon(event, pokemon) {
+    // Verificar si el clic provino de la imagen
+    if (event.target.tagName.toLowerCase() === 'img') {
+      this.$router.push({ name: 'info-pokemon', params: { id: pokemon.numeroPokedex } });
+    }
+  },
+    async borrarPokemon(pokemon)
+    {
+      try {
+    // Verificar si el usuario ha iniciado sesión
+    if (!this.loggedIn) {
+      console.error('Debes iniciar sesión para borrar un Pokémon');
+      // Puedes manejar esto según tus necesidades, como redirigir a iniciar sesión
+      return;
+    }
+
+    // Obtener el token de localStorage
+    const token = localStorage.getItem('token');
+
+    // Verificar si hay un token antes de realizar la solicitud
+    if (!token) {
+      console.error('Token de autenticación no encontrado');
+      // Puedes manejar esto de acuerdo a tus necesidades, redirigir a iniciar sesión, mostrar un mensaje, etc.
+      return;
+    }
+
+    // Configurar los encabezados de la solicitud con el token
+    const headers = {
+      Authorization: `${token}`,
+    };
+
+    // Hacer la solicitud con los encabezados configurados
+    await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${pokemon.numeroPokedex}`, { headers });
+
+    // Actualizar la lista de pokémons eliminando el que acabamos de borrar
+    this.pokemons = this.pokemons.filter(p => p.numeroPokedex !== pokemon.numeroPokedex);
+  } catch (error) {
+    console.error('Error al borrar el Pokémon:', error);
+    // Manejar el error, mostrar un mensaje, etc.
+  }
+    },
+    async editarPokemon(pokemon) {
+      try {
+    // Verificar si el objeto pokemon está definido
+    if (!pokemon || !pokemon.numeroPokedex) {
+      console.error('El Pokémon no está definido correctamente');
+      // Puedes manejar esto según tus necesidades, mostrar un mensaje, etc.
+      return;
+    }
+
+    // Obtén el ID del Pokémon desde la información actual del Pokémon
+    const id = pokemon.numeroPokedex;
+
+    // Redirige al usuario a la ruta de edición
+    this.$router.push({ name: 'editar-pokemon', params: { id } });
+  } catch (error) {
+    console.error('Error al editar el Pokémon:', error);
+    // Manejar el error, mostrar un mensaje, etc.
+  }
+      },
     async obtenerPokemons() {
       try {
         const response = await api.get('/pokemon');
@@ -82,9 +147,7 @@ export default {
         console.error('Error al obtener la lista de Pokémon:', error);
       }
     },
-    redirigirAInfoPokemon(pokemon) {
-      this.$router.push({ name: 'info-pokemon', params: { id: pokemon.numeroPokedex } });
-    },
+    
     logout() {
       useUserStore().logout();
       if (this.$route.path !== '/') {
@@ -131,6 +194,8 @@ export default {
         if (response.status === 200) {
           // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
           this.pokemons = response.data.pokemons;
+          this.currentPage = response.data.currentPage;
+          this.totalPages = response.data.totalPages;
         } else {
           console.error('Error al filtrar Pokémon por tipo:', response.data.error);
           // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
