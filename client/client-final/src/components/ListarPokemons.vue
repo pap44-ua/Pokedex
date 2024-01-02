@@ -16,6 +16,13 @@
           </div>
         </span>
       </nav>
+
+      <div class="search-container">
+        <input v-model="searchTerm" placeholder="Buscar por nombre o ID">
+        <button @click="buscarPokemon">Buscar</button>
+        <button @click="mostrarTipos">Mostrar Tipos</button>
+      </div>
+
     <h1 class="main-content">Pokemons</h1>
     <div class="pokemon-grid">
       <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon(pokemon)">
@@ -37,6 +44,7 @@ export default {
     return {
       pokemons: [],
       showOptions: false,
+      searchTerm: '',
     };
   },
   created() {
@@ -68,6 +76,32 @@ export default {
         this.$router.push('/');
       }
     },
+    async buscarPokemon() {
+      try {
+        const response = await api.get(`/pokemon/buscar/${this.searchTerm}`);
+        
+        if (response.status === 200) {
+          // Actualiza la lista de pokémons con el resultado de la búsqueda
+          this.pokemons = [response.data];
+        } else {
+          // Maneja el caso en el que el servidor responde con un error
+          console.error('Error al buscar Pokémon:', response.data.error);
+          // Puedes mostrar un mensaje al usuario si lo consideras necesario
+        }
+      } catch (error) {
+        console.error('Error al realizar la búsqueda de Pokémon:', error);
+        // Puedes mostrar un mensaje al usuario si lo consideras necesario
+      }
+    },
+    async mostrarTipos()
+    {
+      try {
+        const response = await api.get('/pokemon/tipos');
+        this.pokemons = response.data;
+      } catch (error) {
+        console.error('Error al obtener la lista de Pokémon:', error);
+      }
+    }
   },
 };
 </script>
