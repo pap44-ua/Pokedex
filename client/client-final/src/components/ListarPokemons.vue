@@ -195,15 +195,10 @@ export default {
     async buscarPokemon() {
       try {
         //const response = await api.get(`/pokemon/buscar/${this.searchTerm}`);
-        const response = useApiStore().findPokemon(this.searchTerm);
-        if (response.status === 200) {
-
-          this.pokemons = [response.data];
-        } else {
-
-          console.error('Error al buscar Pokémon:', response.data.error);
-
-        }
+        const response = await useApiStore().findPokemon(this.searchTerm);
+        console.log("RESPUESTA FILTRO",response.data);
+        this.pokemons = [response.data];
+        
       } catch (error) {
         console.error('Error al realizar la búsqueda de Pokémon:', error);
 
@@ -212,7 +207,7 @@ export default {
     async mostrarTipos() {
       try {
         //const response = await api.get('/pokemon/tipos');
-        const response = useApiStore().mostrarTiposPokemon();
+        const response = await useApiStore().mostrarTiposPokemon();
         if (response.status === 200) {
           // Almacena los tipos en la variable tipos
           this.tipos = response.data;
@@ -226,23 +221,25 @@ export default {
       }
     },
     async filtrarPorTipo(tipo, page = 1, perPage = 10) {
-      try {
-        //const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
-        const response = useApiStore().filtrarPorTipo(tipo, page, perPage);
-        if (response.status === 200) {
-          // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
-          this.pokemons = response.data.pokemons;
-          this.currentPage = response.data.currentPage;
-          this.totalPages = response.data.totalPages;
-        } else {
-          console.error('Error al filtrar Pokémon por tipo:', response.data.error);
-          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-        }
-      } catch (error) {
-        console.error('Error al filtrar Pokémon por tipo:', error);
-        // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-      }
-    },
+  try {
+    const response = await useApiStore().filtrarPorTipo(tipo, page, perPage);
+    if (response.status === 200) {
+      // Accede a los datos de la respuesta
+      const responseData = response.data;
+
+      // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
+      this.pokemons = responseData.pokemons;
+      this.currentPage = responseData.currentPage;
+      this.totalPages = responseData.totalPages;
+    } else {
+      console.error('Error al filtrar Pokémon por tipo:', response.data.error);
+      // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+    }
+  } catch (error) {
+    console.error('Error al filtrar Pokémon por tipo:', error);
+    // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+  }
+}
   },
 };
 </script>

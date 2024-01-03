@@ -29,7 +29,8 @@ export const useApiStore = defineStore({
     async findPokemon(item) {
         try {
           const response = await api.get(`/pokemon/buscar/${item}`);
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          console.log("RESPUESTA TIENDA",response.data);
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al obtener el Pokémon:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
@@ -39,7 +40,7 @@ export const useApiStore = defineStore({
       async mostrarTiposPokemon() {
         try {
           const response = await api.get('/pokemon/tipos');
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al obtener los tipos de Pokémon:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
@@ -49,7 +50,7 @@ export const useApiStore = defineStore({
       async obtenerPokemonAleatorio() {
         try {
           const response = await api.get('/pokemon/random');
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al obtener el Pokémon aleatorio:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
@@ -59,7 +60,7 @@ export const useApiStore = defineStore({
       async obtenerDetallesEvolucion(item) {
         try {
           const response = await api.get(`/pokemon/${item}/evolucion`);
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al obtener los detalles de evolución del Pokémon:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
@@ -69,7 +70,7 @@ export const useApiStore = defineStore({
       async filtrarPorTipo(tipo, page, perPage) {
         try {
           const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al filtrar los Pokémon por tipo:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
@@ -79,7 +80,7 @@ export const useApiStore = defineStore({
       async verPerfilModerador(item) {
         try {
           const response = await api.get(`/moderador/ver/${item}`);
-          return response.data; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
         } catch (error) {
           console.error('Error al ver el perfil del moderador:', error);
           throw error; // Propaga el error para que pueda ser manejado en el componente
