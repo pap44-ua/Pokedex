@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import api from '../services/api';
+//import api from '../services/api';
 import { useUserStore } from '../stores/UserStore';
 import { usePokemonStore } from '../stores/ListStore';
 import { useApiStore } from '../stores/MethodStore';
@@ -144,8 +144,8 @@ export default {
     };
 
     // Hacer la solicitud con los encabezados configurados
-    await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${pokemon.numeroPokedex}`, { headers });
-
+    //await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${pokemon.numeroPokedex}`, { headers });
+    await useApiStore().deletePokemon(pokemon.numeroPokedex, headers);
     // Actualizar la lista de pokémons eliminando el que acabamos de borrar
     this.pokemons = this.pokemons.filter(p => p.numeroPokedex !== pokemon.numeroPokedex);
   } catch (error) {
@@ -167,6 +167,7 @@ export default {
 
     // Redirige al usuario a la ruta de edición
     this.$router.push({ name: 'editar-pokemon', params: { id } });
+    
   } catch (error) {
     console.error('Error al editar el Pokémon:', error);
     // Manejar el error, mostrar un mensaje, etc.
@@ -174,9 +175,12 @@ export default {
       },
     async obtenerPokemons() {
       try {
-        const response = await api.get('/pokemon');
+        const response = await useApiStore().getAllPokemons();
+        console.log("RESPUESTA",response);
         this.pokemons = response.data;
+        console.log("POKEMONS",this.pokemons);
         usePokemonStore().setPokemons(response.data);
+       
       } catch (error) {
         console.error('Error al obtener la lista de Pokémon:', error);
       }
@@ -190,8 +194,8 @@ export default {
     },
     async buscarPokemon() {
       try {
-        const response = await api.get(`/pokemon/buscar/${this.searchTerm}`);
-        
+        //const response = await api.get(`/pokemon/buscar/${this.searchTerm}`);
+        const response = useApiStore().findPokemon(this.searchTerm);
         if (response.status === 200) {
 
           this.pokemons = [response.data];
@@ -207,8 +211,8 @@ export default {
     },
     async mostrarTipos() {
       try {
-        const response = await api.get('/pokemon/tipos');
-
+        //const response = await api.get('/pokemon/tipos');
+        const response = useApiStore().mostrarTiposPokemon();
         if (response.status === 200) {
           // Almacena los tipos en la variable tipos
           this.tipos = response.data;
@@ -223,8 +227,8 @@ export default {
     },
     async filtrarPorTipo(tipo, page = 1, perPage = 10) {
       try {
-        const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
-        
+        //const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
+        const response = useApiStore().filtrarPorTipo(tipo, page, perPage);
         if (response.status === 200) {
           // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
           this.pokemons = response.data.pokemons;
