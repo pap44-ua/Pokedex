@@ -77,6 +77,8 @@
 <script>
 import api from '../services/api';
 import { useUserStore } from '../stores/UserStore';
+import { usePokemonStore } from '../stores/ListStore';
+import { useApiStore } from '../stores/MethodStore';
 
 export default {
   data() {
@@ -174,6 +176,7 @@ export default {
       try {
         const response = await api.get('/pokemon');
         this.pokemons = response.data;
+        usePokemonStore().setPokemons(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de Pokémon:', error);
       }

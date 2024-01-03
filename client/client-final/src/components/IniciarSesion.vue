@@ -81,7 +81,9 @@ export default {
 
         localStorage.setItem('token', responseData.token);
         console.log('Token:', responseData.token);
+        if (this.$route.path !== '/') {
         this.$router.push('/');
+      }
       })
       .catch((error) => {
         if (error.response) {
