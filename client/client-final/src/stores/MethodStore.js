@@ -105,7 +105,10 @@ export const useApiStore = defineStore({
       },
       async loginuser(user,password) {
         try {
-          const response = await api.post('http://192.168.1.105:3000/moderador/login', { user,password });
+          const response = await api.post('http://192.168.1.105:3000/moderador/login', {
+            Usuario: user,
+            Contrasena: password
+          } );
           return response;     
         }
         catch (error) {

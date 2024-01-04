@@ -44,8 +44,9 @@
 
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 import { useUserStore } from '../stores/UserStore';
+import { useApiStore } from '../stores/MethodStore';
 
 export default {
   data() {
@@ -65,37 +66,40 @@ export default {
     },
   },
   methods: {
-    iniciarSesion() {
-      let responseData; // Variable para almacenar la respuesta de la solicitud
+    async iniciarSesion() {
+    try {
+      // Realiza la solicitud POST al servidor
+      const response = await useApiStore().loginuser(this.usuario, this.password);
 
-      axios.post('http://192.168.1.105:3000/moderador/login', {
-        Usuario: this.usuario,
-        Contrasena: this.password
-      })
-      .then((response) => {
-        // Almacena la respuesta en la variable responseData
-        responseData = response.data;
+      // Verifica si la respuesta es válida y contiene la propiedad 'data'
+      if (response && response.data) {
+        console.log("USU", response.data);
+        let responseData = response.data;
 
         const userStore = useUserStore();
         userStore.loginUser({ user: this.usuario, password: this.password });
 
         localStorage.setItem('token', responseData.token);
         console.log('Token:', responseData.token);
+        
         if (this.$route.path !== '/') {
-        this.$router.push('/');
-      }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error('Respuesta del servidor con error:', error.response.data);
-          this.errorMensaje = error.response.data.mensaje;
-        } else if (error.request) {
-          console.error('No se recibió respuesta del servidor');
-        } else {
-          console.error('Error al configurar la solicitud:', error.message);
+          this.$router.push('/');
         }
-      });
-    },
+      } else {
+        console.error('Respuesta del servidor no válida:', response);
+        // Puedes manejar este caso según tus necesidades, por ejemplo, mostrar un mensaje de error.
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error('Respuesta del servidor con error:', error.response.data);
+        this.errorMensaje = error.response.data.mensaje;
+      } else if (error.request) {
+        console.error('No se recibió respuesta del servidor');
+      } else {
+        console.error('Error al configurar la solicitud:', error.message);
+      }
+    }
+  },
     logout() {
       useUserStore().logout();
       if (this.$route.path !== '/') {
