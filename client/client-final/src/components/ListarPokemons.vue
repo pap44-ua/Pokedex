@@ -35,10 +35,12 @@
 
     <h1 class="main-content">Pokemons</h1>
     <div class="pokemon-grid">
-      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon($event, pokemon)" @mouseover="mostrarDetallesPokemon(pokemon)"
-     @mouseleave="restablecerDetallesPokemon">
-        <img :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'" />
-
+      <div v-for="pokemon in pokemons" :key="pokemon.numeroPokedex" @click="redirigirAInfoPokemon($event, pokemon)">
+        <img
+        :src="'https://raw.githubusercontent.com/tdmalone/pokecss-media/master/graphics/pokemon/ani-front/' + pokemon.nombre.toLowerCase() + '.gif'"
+        @mouseover="mostrarDetallesPokemon(pokemon)"
+        @mouseleave="restablecerDetallesPokemon"
+      />
         <p>{{ pokemon.numeroPokedex }}</p>
         <p>{{ pokemon.nombre }}</p>
 
