@@ -15,6 +15,16 @@ export const useApiStore = defineStore({
         // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
       }
     },
+    async addPokemon(pokemon, headers) {
+      try {
+        const response=await api.post(`http://192.168.1.105:3000/pokemon/crear/`,pokemon, { headers });
+        return response;
+      } catch (error) {
+        console.error('Error al borrar el Pokémon:', error);
+        throw error;
+        // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+      }
+    },
     async getAllPokemons() {
       try {
         const response = await api.get('/pokemon');
@@ -79,11 +89,18 @@ export const useApiStore = defineStore({
   
       async verPerfilModerador(item) {
         try {
-          const response = await api.get(`/moderador/ver/${item}`);
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          const token = localStorage.getItem('token'); // Obtener el token del localStorage
+          const headers = {
+            Authorization: `${token}`,
+          };
+      
+          const response = await api.get(`http://192.168.1.105:3000/moderador/ver/${item}`, { headers });
+      
+          console.log('Respuesta de la API:', response);
+          return response.data;
         } catch (error) {
           console.error('Error al ver el perfil del moderador:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error;
         }
       },
 }

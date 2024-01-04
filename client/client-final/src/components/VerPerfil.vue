@@ -91,10 +91,10 @@
   </template>
   
   <script>
-  import axios from 'axios';
-  import api from '../services/api';
+  //import axios from 'axios';
+  //import api from '../services/api';
   import { useUserStore } from '../stores/UserStore';
-  
+  import { useApiStore } from '../stores/MethodStore';
   export default {
     data() {
       return {
@@ -124,11 +124,16 @@
       async agregarPokemon() {
         try {
         const token = localStorage.getItem('token'); // Obtén el token del localStorage
-        const response = await axios.post('http://192.168.1.105:3000/pokemon/crear', this.pokemonInfo[0], {
+        /*const response = await axios.post('http://192.168.1.105:3000/pokemon/crear', this.pokemonInfo[0], {
           headers: {
             Authorization: `${token}`,
           },
-        });
+        });*/
+        const headers = {
+          Authorization: `${token}`,
+        };
+
+        const response = await useApiStore().addPokemon(this.pokemonInfo[0], headers);
 
         console.log('Respuesta de la API al agregar Pokémon:', response.data);
         this.mensajeAgregado = true;
@@ -140,17 +145,12 @@
       },
         async fetchModeratorProfile(username) {
             try {
-            const token = localStorage.getItem('token'); // Obtener el token del localStorage
-            const response = await api.get(`http://192.168.1.105:3000/moderador/ver/${username}`, {
-                headers: {
-                Authorization: `${token}`,
-                },
-            });
-            console.log('Respuesta de la API:', response);
-            this.profileData = response.data;
-            } catch (error) {
-            console.error('Error al obtener el perfil del moderador:', error);
-            this.error = 'Error al obtener datos de la API';
+              const response = await useApiStore().verPerfilModerador(username);
+              console.log('Respuesta de la API MODERADOR:', response);
+              this.profileData = response;
+              } catch (error) {
+              console.error('Error al obtener el perfil del moderador:', error);
+              this.error = 'Error al obtener datos de la API';
             }
       },
       logout() {
@@ -229,6 +229,16 @@
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
 }
 </style>
   
