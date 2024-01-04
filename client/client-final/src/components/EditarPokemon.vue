@@ -76,9 +76,9 @@
   </template>
   
   <script>
-  import api from '../services/api';
+  //import api from '../services/api';
   import { useUserStore } from '../stores/UserStore';
-
+  import { useApiStore } from '../stores/MethodStore';
   export default {
     data() {
       return {
@@ -112,7 +112,7 @@
       async buscarPokemonActual() {
         try {
           const nombreOId = this.$route.params.id;
-          const response = await api.get(`/pokemon/buscar/${nombreOId}`);
+          const response = await useApiStore().findPokemon(nombreOId);
           this.pokemonInfo = { ...response.data }; // Actualiza pokemonInfo con los datos existentes
         } catch (error) {
           console.error('Error al buscar el Pokémon:', error);
@@ -127,11 +127,6 @@
             console.error('Token de autenticación no encontrado');
             return;
             }
-
-            // Obtener los datos actuales del Pokémon
-            
-
-            // Convertir a objeto plano para eliminar getters y setters
             const datosActualizados = JSON.parse(JSON.stringify(this.pokemonInfo));
 
             // Configurar los encabezados de la solicitud con el token
@@ -141,7 +136,7 @@
 
             console.log('Datos actualizados:', datosActualizados);
 
-            const response = await api.put(`/pokemon/actualizar/${id}`, datosActualizados, { headers });
+            const response = await useApiStore().actualizarPokemon(datosActualizados,headers,id);
 
             console.log('Respuesta de la API:', response);
 

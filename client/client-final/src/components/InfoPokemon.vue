@@ -65,7 +65,8 @@
   </template>
   
   <script>
-  import api from '../services/api';
+  import { useApiStore } from '../stores/MethodStore';
+//import api from '../services/api';
   import { useUserStore } from '../stores/UserStore';
   
   export default {
@@ -108,7 +109,7 @@
   },
   async obtenerInfoPokemonEvolucion(id) {
     try {
-      const response = await api.get(`/pokemon/buscar/${id}`);
+      const response = await useApiStore().findPokemon(id);
       this.evolutionInfo = response.data;
     } catch (error) {
       console.error('Error al obtener información de la evolución del Pokémon:', error);
@@ -116,7 +117,7 @@
   },
       async obtenerInfoPokemon(id) {
         try {
-          const response = await api.get(`/pokemon/buscar/${id}`);
+          const response = await useApiStore().findPokemon(id);
           this.pokemon = response.data;
         } catch (error) {
           console.error('Error al obtener información del Pokémon:', error);
@@ -140,7 +141,7 @@
           };
 
           // Hacer la solicitud con los encabezados configurados
-          await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${this.pokemon.numeroPokedex}`, { headers });
+          await useApiStore().deletePokemon(this.pokemon.numeroPokedex, headers);
           this.$router.push('/listar-pokemons');
           // Actualizar la interfaz o redirigir después de borrar el Pokémon
         } catch (error) {

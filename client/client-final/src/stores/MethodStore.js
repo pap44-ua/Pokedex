@@ -115,6 +115,16 @@ export const useApiStore = defineStore({
           console.error('Error al obtener los Pokémon:', error);
           throw error;// Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
         }
-      }
-    }
+      },
+      async actualizarPokemon(pokemon, headers,id) {
+        try {
+          const response=await api.put(`/pokemon/actualizar/${id}`,pokemon, { headers });
+          return response;
+        } catch (error) {
+          console.error('Error al borrar el Pokémon:', error);
+          throw error;
+          // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+        }
+    },
+  },
 });

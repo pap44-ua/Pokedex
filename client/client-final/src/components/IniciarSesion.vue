@@ -120,7 +120,7 @@ export default {
 .animated-button::before {
   content: "";
   position: absolute;
-  background: linear-gradient(90deg, #1c74f1, #f12711, #ffcc00);
+  background: linear-gradient(90deg, #1c74f1, #7ec7ff, #ffffff);
   top: 0;
   left: -100%;
   width: 100%;
