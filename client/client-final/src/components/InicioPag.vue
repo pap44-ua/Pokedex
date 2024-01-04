@@ -49,8 +49,10 @@
 </template>
 
 <script>
-import api from '../services/api';
+
+//import api from '../services/api';
 import { useUserStore } from '../stores/UserStore';
+import { useApiStore } from '../stores/MethodStore';
 
 export default {
   data() {
@@ -73,7 +75,8 @@ export default {
   methods: {
     async obtenerPokemonAleatorio() {
       try {
-        const response = await api.get('/pokemon/random');
+        //const response = await api.get('/pokemon/random');
+        const response = await useApiStore().obtenerPokemonAleatorio();
         console.log('Respuesta de la API:', response);
         this.pokemonAleatorio = response.data;
       } catch (error) {
