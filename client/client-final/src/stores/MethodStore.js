@@ -4,7 +4,10 @@ import api from '../services/api';
 export const useApiStore = defineStore({
   id: 'methods',
   state: () => ({
-    // Puedes agregar otras propiedades relacionadas con la API si es necesario
+    pokemons: [], // Almacena los Pokémon obtenidos
+    currentPage: 1, // Página actual
+    itemsPerPage: 10, // Número de elementos por página
+    totalPokemons: 0, // Total de Pokémon en la base de datos  
   }),
   actions: {
     async deletePokemon(numeroPokedex, headers) {
@@ -25,15 +28,40 @@ export const useApiStore = defineStore({
         // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
       }
     },
-    async getAllPokemons() {
+    async getAllPokemons(currentPage) {
       try {
-        const response = await api.get('/pokemon');
-        return response;
+        const response = await api.get(`http://192.168.1.105:3000/pokemon?page=${currentPage}`);
+        console.log("RESPUESTA TIENDA",response.data);
+        if (response.status === 200) {
+          const responseData = response.data;
+          // Almacena los datos de paginación en las propiedades de la tienda
+          this.pokemons = responseData.pokemons;
+          this.currentPage = responseData.currentPage;
+          this.totalPages = responseData.totalPages;
+          this.itemsPerPage = responseData.itemsPerPage;
+         
+          
+          return responseData;
+        } else {
+          console.error('Error al obtener la lista de Pokémon:', response.data.error);
+          // Puedes manejar un mensaje de error o redirigir según sea necesario
         }
-        catch (error) {
-          console.error('Error al obtener los Pokémon:', error);
-          throw error;// Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
-        }
+      } catch (error) {
+        console.error('Error al obtener la lista de Pokémon:', error);
+        throw error;
+      }
+    },
+    
+    
+    
+    async setPage(page) {
+      this.currentPage = page;
+      await this.getAllPokemons();
+    },
+    
+    async setItemsPerPage(itemsPerPage) {
+      this.itemsPerPage = itemsPerPage;
+      await this.getAllPokemons();
     },
    
     async findPokemon(item) {

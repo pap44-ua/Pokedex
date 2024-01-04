@@ -398,37 +398,65 @@ function borrarPokemon(req, res) {
   });
 }
 
-function obtenerTodosLosPokemons(req, res) {
-  const sql = 'SELECT * FROM pokemon';
+const ITEMS_PER_PAGE = 10; // Número de elementos por página
 
-  db.all(sql, [], (err, rows) => {
+function obtenerTodosLosPokemons(req, res) {
+  let page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * ITEMS_PER_PAGE;
+
+  if (isNaN(page)) {
+    page = 1; // Asigna un valor predeterminado si la página no es un número válido
+  }
+
+  const sqlCount = 'SELECT COUNT(*) as total FROM pokemon';
+  db.get(sqlCount, [], (err, result) => {
     if (err) {
       console.error(err.message);
-      res.status(500).json({ error: 'Error al obtener todos los Pokémon de la base de datos' });
+      res.status(500).json({ error: 'Error al obtener el total de Pokémon de la base de datos' });
       return;
     }
 
-    if (rows.length > 0) {
-      const todosLosPokemons = rows.map(row => ({
-        nombre: row.nombre,
-        numeroPokedex: row.numeroPokedex,
-        pS: row.pS,
-        atk: row.atk,
-        def: row.def,
-        SpAtk: row.SpAtk,
-        SpDef: row.SpDef,
-        Spe: row.Spe,
-        tipo1: row.tipo1,
-        tipo2: row.tipo2,
-        evolucion: row.evolucion,
-        habilidad: row.habilidad
-      }));
-      res.json(todosLosPokemons);
-    } else {
-      res.status(404).json({ error: 'No se encontraron Pokémon en la base de datos' });
-    }
+    const totalItems = result.total;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    const sql = `SELECT * FROM pokemon LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
+
+    db.all(sql, [], (err, rows) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Error al obtener los Pokémon de la base de datos' });
+        return;
+      }
+
+      if (rows.length > 0) {
+        const todosLosPokemons = rows.map(row => ({
+          nombre: row.nombre,
+          numeroPokedex: row.numeroPokedex,
+          pS: row.pS,
+          atk: row.atk,
+          def: row.def,
+          SpAtk: row.SpAtk,
+          SpDef: row.SpDef,
+          Spe: row.Spe,
+          tipo1: row.tipo1,
+          tipo2: row.tipo2,
+          evolucion: row.evolucion,
+          habilidad: row.habilidad
+        }));
+
+        res.json({
+          pokemons: todosLosPokemons,
+          currentPage: page,
+          totalPages: totalPages,
+          itemsPerPage: ITEMS_PER_PAGE
+        });
+      } else {
+        res.status(404).json({ error: 'No se encontraron Pokémon en la base de datos' });
+      }
+    });
   });
 }
+
 
 
 function obtenerTipos(req, res) {

@@ -64,11 +64,9 @@
       </div>
     </div>
     <div class="pagination">
-  <button @click="filtrarPorTipo(tipo, currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
-  <span>{{ currentPage }}</span>
-  <button @click="filtrarPorTipo(tipo, currentPage + 1)" :disabled="currentPage === totalPages">Siguiente</button>
-
-
+  <button @click="obtenerPokemons(currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
+  <span>{{ currentPage }} / {{ totalPages }}</span>
+  <button @click="obtenerPokemons(currentPage + 1)" :disabled="currentPage === totalPages" >Siguiente</button>
 </div>
 
 
@@ -175,18 +173,33 @@ export default {
     // Manejar el error, mostrar un mensaje, etc.
   }
       },
-    async obtenerPokemons() {
-      try {
-        const response = await useApiStore().getAllPokemons();
-        console.log("RESPUESTA",response);
-        this.pokemons = response.data;
-        console.log("POKEMONS",this.pokemons);
-        usePokemonStore().setPokemons(response.data);
-       
-      } catch (error) {
-        console.error('Error al obtener la lista de Pokémon:', error);
-      }
-    },
+    
+    async obtenerPokemons(page = 1) {
+  try {
+    const response = await useApiStore().getAllPokemons(page);
+    
+      // Accede a los datos de la respuesta
+      const responseData = response;
+      console.log("RESPONSE DATA SOLO",responseData);
+      console.log("RESPONSE DATA",responseData.pokemons);
+      console.log("RESPONSE DATA CURRENT",responseData.currentPage);
+      console.log("RESPONSE DATA TOTAL",responseData.totalPages);
+
+      // Actualiza la lista de pokémons con el resultado de la paginación
+      this.totalPages = responseData.totalPages;
+      this.currentPage = responseData.currentPage;
+      this.pokemons = responseData.pokemons;
+      //console.log("POKEMONS",this.pokemons[0].nombre);
+    
+      usePokemonStore().setPokemons(responseData);
+    
+      // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+    
+  } catch (error) {
+    console.error('Error al obtener la lista de Pokémon:', error);
+    // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+  }
+},
     
     logout() {
       useUserStore().logout();
