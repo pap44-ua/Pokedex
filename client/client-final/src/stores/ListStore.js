@@ -4,7 +4,7 @@ export const usePokemonStore = defineStore({
   id: 'pokemon',
   state: () => ({
     pokemons: [],
-    pokemonDetail: null,
+    
   }),
   actions: {
     setPokemons(pokemons) {

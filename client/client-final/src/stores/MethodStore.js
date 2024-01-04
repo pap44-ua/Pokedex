@@ -103,5 +103,15 @@ export const useApiStore = defineStore({
           throw error;
         }
       },
-}
+      async loginuser(user,password) {
+        try {
+          const response = await api.post('http://192.168.1.105:3000/moderador/login', { user,password });
+          return response;     
+        }
+        catch (error) {
+          console.error('Error al obtener los Pokémon:', error);
+          throw error;// Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+        }
+      }
+    }
 });
