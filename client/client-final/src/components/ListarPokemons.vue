@@ -18,8 +18,8 @@
       </nav>
 
       <div class="search-container">
-        <input v-model="searchTerm" placeholder="Buscar por nombre o ID">
         <div class="separar">
+          <input v-model="searchTerm" placeholder="Buscar por nombre o ID">
             <button type="submit" class="animated-button" @click="buscarPokemon">Buscar Pokemon</button>
           </div>
         <div class="dropdown">
@@ -28,8 +28,10 @@
           </div>
         <div v-show="tipos.length > 0" class="dropdown-content">
           <button v-for="tipo in tipos" :key="tipo" @click="filtrarPorTipo(tipo)">{{ tipo }}</button>
+          <button @click="obtenerPokemons">Todos</button>
         </div>
       </div>
+      <button v-if="loggedIn" style="margin-top: 20px;" class="animated-button" @click="redirigirAAnadirPokemon">Añadir Pokémon</button>
       </div>
 
 
@@ -104,6 +106,10 @@ export default {
     },
   },
   methods: {
+    redirigirAAnadirPokemon() {
+      this.$router.push('/anadir-pokemon');
+    },
+    
       mostrarDetallesPokemon(pokemon) {
       this.pokemonDetail = pokemon;
     },
@@ -113,93 +119,80 @@ export default {
     },
 
     redirigirAInfoPokemon(event, pokemon) {
-    // Verificar si el clic provino de la imagen
-    if (event.target.tagName.toLowerCase() === 'img') {
-      this.$router.push({ name: 'info-pokemon', params: { id: pokemon.numeroPokedex } });
+      if (event.target.tagName.toLowerCase() === 'img') {
+        this.$router.push({ name: 'info-pokemon', params: { id: pokemon.numeroPokedex } });
     }
   },
-    async borrarPokemon(pokemon)
-    {
+    async borrarPokemon(pokemon){
       try {
-    // Verificar si el usuario ha iniciado sesión
-    if (!this.loggedIn) {
-      console.error('Debes iniciar sesión para borrar un Pokémon');
-      // Puedes manejar esto según tus necesidades, como redirigir a iniciar sesión
-      return;
-    }
+    
+        if (!this.loggedIn) {
+          console.error('Debes iniciar sesión para borrar un Pokémon');
+          
+          return;
+        }
+        const token = localStorage.getItem('token');
 
-    // Obtener el token de localStorage
-    const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('Token de autenticación no encontrado');
+          return;
+        }
 
-    // Verificar si hay un token antes de realizar la solicitud
-    if (!token) {
-      console.error('Token de autenticación no encontrado');
-      // Puedes manejar esto de acuerdo a tus necesidades, redirigir a iniciar sesión, mostrar un mensaje, etc.
-      return;
-    }
+        const headers = {
+          Authorization: `${token}`,
+        };
+        //await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${pokemon.numeroPokedex}`, { headers });
+        await useApiStore().deletePokemon(pokemon.numeroPokedex, headers);
 
-    // Configurar los encabezados de la solicitud con el token
-    const headers = {
-      Authorization: `${token}`,
-    };
+        this.pokemons = this.pokemons.filter(p => p.numeroPokedex !== pokemon.numeroPokedex);
 
-    // Hacer la solicitud con los encabezados configurados
-    //await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${pokemon.numeroPokedex}`, { headers });
-    await useApiStore().deletePokemon(pokemon.numeroPokedex, headers);
-    // Actualizar la lista de pokémons eliminando el que acabamos de borrar
-    this.pokemons = this.pokemons.filter(p => p.numeroPokedex !== pokemon.numeroPokedex);
-  } catch (error) {
-    console.error('Error al borrar el Pokémon:', error);
-    // Manejar el error, mostrar un mensaje, etc.
-  }
+      } catch (error) {
+        console.error('Error al borrar el Pokémon:', error);
+      }
     },
     async editarPokemon(pokemon) {
       try {
-    // Verificar si el objeto pokemon está definido
-    if (!pokemon || !pokemon.numeroPokedex) {
-      console.error('El Pokémon no está definido correctamente');
-      // Puedes manejar esto según tus necesidades, mostrar un mensaje, etc.
-      return;
-    }
-
-    // Obtén el ID del Pokémon desde la información actual del Pokémon
-    const id = pokemon.numeroPokedex;
-
-    // Redirige al usuario a la ruta de edición
-    this.$router.push({ name: 'editar-pokemon', params: { id } });
     
-  } catch (error) {
-    console.error('Error al editar el Pokémon:', error);
-    // Manejar el error, mostrar un mensaje, etc.
-  }
-      },
+        if (!pokemon || !pokemon.numeroPokedex) {
+          console.error('El Pokémon no está definido correctamente');
+          return;
+        }
+
+        const id = pokemon.numeroPokedex;
+        this.$router.push({ name: 'editar-pokemon', params: { id } });
+    
+      } catch (error) {
+        console.error('Error al editar el Pokémon:', error);
+        // Manejar el error, mostrar un mensaje, etc.
+      }
+    },
     
     async obtenerPokemons(page = 1) {
-  try {
-    const response = await useApiStore().getAllPokemons(page);
-    
-      // Accede a los datos de la respuesta
-      const responseData = response;
-      console.log("RESPONSE DATA SOLO",responseData);
-      console.log("RESPONSE DATA",responseData.pokemons);
-      console.log("RESPONSE DATA CURRENT",responseData.currentPage);
-      console.log("RESPONSE DATA TOTAL",responseData.totalPages);
+      try {
+        const response = await useApiStore().getAllPokemons(page);
+        
+          // Accede a los datos de la respuesta
+          const responseData = response;
+          console.log("RESPONSE DATA SOLO",responseData);
+          console.log("RESPONSE DATA",responseData.pokemons);
+          console.log("RESPONSE DATA CURRENT",responseData.currentPage);
+          console.log("RESPONSE DATA TOTAL",responseData.totalPages);
 
-      // Actualiza la lista de pokémons con el resultado de la paginación
-      this.totalPages = responseData.totalPages;
-      this.currentPage = responseData.currentPage;
-      this.pokemons = responseData.pokemons;
-      //console.log("POKEMONS",this.pokemons[0].nombre);
-    
-      usePokemonStore().setPokemons(responseData);
-    
-      // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-    
-  } catch (error) {
-    console.error('Error al obtener la lista de Pokémon:', error);
-    // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-  }
-},
+          // Actualiza la lista de pokémons con el resultado de la paginación
+          this.totalPages = responseData.totalPages;
+          this.currentPage = responseData.currentPage;
+          this.pokemons = responseData.pokemons;
+          //console.log("POKEMONS",this.pokemons[0].nombre);
+        
+          usePokemonStore().setPokemons(responseData);
+        
+          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+        
+      } catch (error) {
+        console.error('Error al obtener la lista de Pokémon:', error);
+        
+      }
+    },
     
     logout() {
       useUserStore().logout();
@@ -224,37 +217,34 @@ export default {
         //const response = await api.get('/pokemon/tipos');
         const response = await useApiStore().mostrarTiposPokemon();
         if (response.status === 200) {
-          // Almacena los tipos en la variable tipos
           this.tipos = response.data;
+          
         } else {
           console.error('Error al obtener los tipos de Pokémon:', response.data.error);
-          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
         }
       } catch (error) {
         console.error('Error al obtener los tipos de Pokémon:', error);
-        // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+        
       }
     },
     async filtrarPorTipo(tipo, page = 1, perPage = 10) {
-  try {
-    const response = await useApiStore().filtrarPorTipo(tipo, page, perPage);
-    if (response.status === 200) {
-      // Accede a los datos de la respuesta
-      const responseData = response.data;
+      try {
+        const response = await useApiStore().filtrarPorTipo(tipo, page, perPage);
+        if (response.status === 200) {
+         
+          const responseData = response.data;
 
-      // Actualiza la lista de pokémons con el resultado del filtro por tipo y paginación
-      this.pokemons = responseData.pokemons;
-      this.currentPage = responseData.currentPage;
-      this.totalPages = responseData.totalPages;
-    } else {
-      console.error('Error al filtrar Pokémon por tipo:', response.data.error);
-      // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-    }
-  } catch (error) {
-    console.error('Error al filtrar Pokémon por tipo:', error);
-    // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
-  }
-}
+          this.pokemons = responseData.pokemons;
+          this.currentPage = responseData.currentPage;
+          this.totalPages = responseData.totalPages;
+
+        } else {
+          console.error('Error al filtrar Pokémon por tipo:', response.data.error);
+        }
+      } catch (error) {
+        console.error('Error al filtrar Pokémon por tipo:', error);
+      }
+    },
   },
 };
 </script>
