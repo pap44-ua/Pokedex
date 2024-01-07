@@ -56,7 +56,7 @@ app.delete('/pokemon/borrar/:nombreOId', borrarPokemon);
 app.get('/pokemon/tipos', obtenerTipos);
 
 
-const ip = '192.168.1.105'
-app.listen(port,ip, () => {
-  console.log(`Servidor en ejecución en el puerto ${port} y ip ${ip}`);
+
+app.listen(port, () => {
+  console.log(`Servidor en ejecución en el puerto ${port}`);
 });

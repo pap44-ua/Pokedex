@@ -4,7 +4,6 @@
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>
@@ -79,7 +78,6 @@
         <label>Nº de las habilidades (habilidad):</label>
         <input v-model="pokemonInfo[0].habilidad" placeholder="Nº de las habilidades (habilidad)">
           </div>
-          <!-- Botón para añadir Pokémon -->
           <button class="add-button" @click="agregarPokemon">Añadir</button>
           <div v-if="mensajeAgregado" class="success-message">
             Pokémon agregado exitosamente.
@@ -105,52 +103,48 @@
       };
     },
     created() {
-      // Obtener el nombre de usuario desde el UserStore
-      const username = useUserStore().user;
+        const username = useUserStore().user;
         console.log('Nombre de usuario:', username);
-      // Hacer la llamada a la API para obtener el perfil del moderador
-      this.pokemonInfo = Array(12).fill({ nombre: '', numeroPokedex: '', pS: '', atk: '', def: '', SpAtk: '', SpDef: '', Spe: '', tipo1: '', tipo2: '', evolucion: '', habilidad: '' });
-      this.fetchModeratorProfile(username);
+        this.pokemonInfo = Array(12).fill({ nombre: '', numeroPokedex: '', pS: '', atk: '', def: '', SpAtk: '', SpDef: '', Spe: '', tipo1: '', tipo2: '', evolucion: '', habilidad: '' });
+        this.fetchModeratorProfile(username);
     },
     computed: {
         loggedIn() {
-        return useUserStore().user !== null;
+          return useUserStore().user !== null;
         },
         username() {
-        return useUserStore().user;
+          return useUserStore().user;
         },
     },
     methods: {
       async agregarPokemon() {
         try {
-        const token = localStorage.getItem('token'); // Obtén el token del localStorage
-        /*const response = await axios.post('http://192.168.1.105:3000/pokemon/crear', this.pokemonInfo[0], {
-          headers: {
+          const token = localStorage.getItem('token');
+          /*const response = await axios.post('http://localhost:3000/pokemon/crear', this.pokemonInfo[0], {
+            headers: {
+              Authorization: `${token}`,
+            },
+          });*/
+          const headers = {
             Authorization: `${token}`,
-          },
-        });*/
-        const headers = {
-          Authorization: `${token}`,
-        };
+          };
 
-        const response = await useApiStore().addPokemon(this.pokemonInfo[0], headers);
+          const response = await useApiStore().addPokemon(this.pokemonInfo[0], headers);
 
-        console.log('Respuesta de la API al agregar Pokémon:', response.data);
-        this.mensajeAgregado = true;
-        // Puedes manejar la respuesta de la API aquí según tus necesidades
+          console.log('Respuesta de la API al agregar Pokémon:', response.data);
+          this.mensajeAgregado = true;
       } catch (error) {
         console.error('Error al agregar el Pokémon:', error);
-        // Puedes manejar los errores aquí según tus necesidades
       }
       },
         async fetchModeratorProfile(username) {
             try {
-              const response = await useApiStore().verPerfilModerador(username);
-              console.log('Respuesta de la API MODERADOR:', response);
-              this.profileData = response;
+                const response = await useApiStore().verPerfilModerador(username);
+                console.log('Respuesta de la API MODERADOR:', response);
+                this.profileData = response;
               } catch (error) {
-              console.error('Error al obtener el perfil del moderador:', error);
-              this.error = 'Error al obtener datos de la API';
+                console.error('Error al obtener el perfil del moderador:', error);
+                this.error = 'Error al obtener datos de la API';
             }
       },
       logout() {
@@ -172,17 +166,17 @@
 
   .split-container {
     display: flex;
-    width: 80%; /* Puedes ajustar el ancho según tus necesidades */
+    width: 80%;
   }
 
   .user-info {
     flex: 1;
-    margin-right: 20px; /* Espacio entre la información del usuario y la sección de Pokémon */
+    margin-right: 20px;
   }
 
   .pokemon-container {
     flex: 1;
-    margin-left: 20px; /* Espacio entre la sección de Pokémon y la información del usuario */
+    margin-left: 20px;
   }
 
   .pokemon-input {
@@ -190,7 +184,7 @@
   }
   .add-button {
     margin-bottom: 30px;
-    width: auto; /* Establecer el ancho automático para evitar que se vea alargado verticalmente */
+    width: auto;
   }
 
   .navbar {

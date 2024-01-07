@@ -4,37 +4,37 @@ import api from '../services/api';
 export const useApiStore = defineStore({
   id: 'methods',
   state: () => ({
-    pokemons: [], // Almacena los Pokémon obtenidos
-    currentPage: 1, // Página actual
-    itemsPerPage: 10, // Número de elementos por página
-    totalPokemons: 0, // Total de Pokémon en la base de datos  
+    pokemons: [], 
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalPokemons: 0,
   }),
   actions: {
     async deletePokemon(numeroPokedex, headers) {
       try {
-        await api.delete(`http://192.168.1.105:3000/pokemon/borrar/${numeroPokedex}`, { headers });
+        await api.delete(`http://localhost:3000/pokemon/borrar/${numeroPokedex}`, { headers });
       } catch (error) {
         console.error('Error al borrar el Pokémon:', error);
-        // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+   
       }
     },
     async addPokemon(pokemon, headers) {
       try {
-        const response=await api.post(`http://192.168.1.105:3000/pokemon/crear/`,pokemon, { headers });
+        const response=await api.post(`http://localhost:3000/pokemon/crear/`,pokemon, { headers });
         return response;
       } catch (error) {
         console.error('Error al borrar el Pokémon:', error);
         throw error;
-        // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+
       }
     },
     async getAllPokemons(currentPage) {
       try {
-        const response = await api.get(`http://192.168.1.105:3000/pokemon?page=${currentPage}`);
+        const response = await api.get(`http://localhost:3000/pokemon?page=${currentPage}`);
         console.log("RESPUESTA TIENDA",response.data);
         if (response.status === 200) {
           const responseData = response.data;
-          // Almacena los datos de paginación en las propiedades de la tienda
+
           this.pokemons = responseData.pokemons;
           this.currentPage = responseData.currentPage;
           this.totalPages = responseData.totalPages;
@@ -44,7 +44,7 @@ export const useApiStore = defineStore({
           return responseData;
         } else {
           console.error('Error al obtener la lista de Pokémon:', response.data.error);
-          // Puedes manejar un mensaje de error o redirigir según sea necesario
+
         }
       } catch (error) {
         console.error('Error al obtener la lista de Pokémon:', error);
@@ -68,61 +68,61 @@ export const useApiStore = defineStore({
         try {
           const response = await api.get(`/pokemon/buscar/${item}`);
           console.log("RESPUESTA TIENDA",response.data);
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response;
         } catch (error) {
           console.error('Error al obtener el Pokémon:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error;
         }
       },
   
       async mostrarTiposPokemon() {
         try {
           const response = await api.get('/pokemon/tipos');
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; 
         } catch (error) {
           console.error('Error al obtener los tipos de Pokémon:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error; 
         }
       },
   
       async obtenerPokemonAleatorio() {
         try {
           const response = await api.get('/pokemon/random');
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; 
         } catch (error) {
           console.error('Error al obtener el Pokémon aleatorio:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error; 
         }
       },
   
       async obtenerDetallesEvolucion(item) {
         try {
           const response = await api.get(`/pokemon/${item}/evolucion`);
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; 
         } catch (error) {
           console.error('Error al obtener los detalles de evolución del Pokémon:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error; 
         }
       },
   
       async filtrarPorTipo(tipo, page, perPage) {
         try {
           const response = await api.get(`/pokemon/tipo/${tipo}?page=${page}&per_page=${perPage}`);
-          return response; // Retorna la respuesta para que pueda ser utilizada en el componente
+          return response; 
         } catch (error) {
           console.error('Error al filtrar los Pokémon por tipo:', error);
-          throw error; // Propaga el error para que pueda ser manejado en el componente
+          throw error; 
         }
       },
   
       async verPerfilModerador(item) {
         try {
-          const token = localStorage.getItem('token'); // Obtener el token del localStorage
+          const token = localStorage.getItem('token'); 
           const headers = {
             Authorization: `${token}`,
           };
       
-          const response = await api.get(`http://192.168.1.105:3000/moderador/ver/${item}`, { headers });
+          const response = await api.get(`http://localhost:3000/moderador/ver/${item}`, { headers });
       
           console.log('Respuesta de la API:', response);
           return response.data;
@@ -133,7 +133,7 @@ export const useApiStore = defineStore({
       },
       async loginuser(user,password) {
         try {
-          const response = await api.post('http://192.168.1.105:3000/moderador/login', {
+          const response = await api.post('http://localhost:3000/moderador/login', {
             Usuario: user,
             Contrasena: password
           } );
@@ -141,7 +141,7 @@ export const useApiStore = defineStore({
         }
         catch (error) {
           console.error('Error al obtener los Pokémon:', error);
-          throw error;// Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+          throw error;
         }
       },
       async actualizarPokemon(pokemon, headers,id) {
@@ -151,7 +151,7 @@ export const useApiStore = defineStore({
         } catch (error) {
           console.error('Error al borrar el Pokémon:', error);
           throw error;
-          // Puedes manejar el error según tus necesidades, como mostrar un mensaje o redirigir.
+          
         }
     },
   },

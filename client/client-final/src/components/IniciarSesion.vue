@@ -68,10 +68,9 @@ export default {
   methods: {
     async iniciarSesion() {
     try {
-      // Realiza la solicitud POST al servidor
+      
       const response = await useApiStore().loginuser(this.usuario, this.password);
 
-      // Verifica si la respuesta es válida y contiene la propiedad 'data'
       if (response && response.data) {
         console.log("USU", response.data);
         let responseData = response.data;
@@ -87,7 +86,6 @@ export default {
         }
       } else {
         console.error('Respuesta del servidor no válida:', response);
-        // Puedes manejar este caso según tus necesidades, por ejemplo, mostrar un mensaje de error.
       }
     } catch (error) {
       if (error.response) {

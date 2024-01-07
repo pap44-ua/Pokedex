@@ -4,7 +4,6 @@
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>
@@ -171,22 +170,18 @@ export default {
       try {
         const response = await useApiStore().getAllPokemons(page);
         
-          // Accede a los datos de la respuesta
-          const responseData = response;
-          console.log("RESPONSE DATA SOLO",responseData);
-          console.log("RESPONSE DATA",responseData.pokemons);
-          console.log("RESPONSE DATA CURRENT",responseData.currentPage);
-          console.log("RESPONSE DATA TOTAL",responseData.totalPages);
+        const responseData = response;
+        console.log("RESPONSE DATA SOLO",responseData);
+        console.log("RESPONSE DATA",responseData.pokemons);
+        console.log("RESPONSE DATA CURRENT",responseData.currentPage);
+        console.log("RESPONSE DATA TOTAL",responseData.totalPages);
 
-          // Actualiza la lista de pokémons con el resultado de la paginación
-          this.totalPages = responseData.totalPages;
-          this.currentPage = responseData.currentPage;
-          this.pokemons = responseData.pokemons;
-          //console.log("POKEMONS",this.pokemons[0].nombre);
-        
-          usePokemonStore().setPokemons(responseData);
-        
-          // Puedes mostrar un mensaje de error al usuario si lo consideras necesario
+        this.totalPages = responseData.totalPages;
+        this.currentPage = responseData.currentPage;
+        this.pokemons = responseData.pokemons;
+        //console.log("POKEMONS",this.pokemons[0].nombre);
+      
+        usePokemonStore().setPokemons(responseData);
         
       } catch (error) {
         console.error('Error al obtener la lista de Pokémon:', error);

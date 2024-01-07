@@ -4,7 +4,6 @@
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>
@@ -18,7 +17,6 @@
       </nav>
 
     <div v-if="loggedIn">
-      <!-- Deshabilitar los botones si this.pokemon es null -->
       <button @click="borrarPokemon" :disabled="!pokemon">Borrar</button>
       <button @click="editarPokemon" :disabled="!pokemon">Editar</button>
 
@@ -94,27 +92,24 @@
     },
     methods: {
       mostrarInfoEvolucion() {
-    // Obtener la información de la evolución del Pokémon
-    const evolutionId = this.pokemon.evolucion;
+        const evolutionId = this.pokemon.evolucion;
 
-  // Verificar si evolutionId es null o undefined antes de hacer la solicitud
-  if (evolutionId) {
-    this.obtenerInfoPokemonEvolucion(evolutionId);
-    this.showEvolutionModal = true;
-  }
-  },
-  ocultarInfoEvolucion() {
-    // Ocultar el modal cuando se retira el ratón
-    this.showEvolutionModal = false;
-  },
-  async obtenerInfoPokemonEvolucion(id) {
-    try {
-      const response = await useApiStore().findPokemon(id);
-      this.evolutionInfo = response.data;
-    } catch (error) {
-      console.error('Error al obtener información de la evolución del Pokémon:', error);
-    }
-  },
+        if (evolutionId) {
+          this.obtenerInfoPokemonEvolucion(evolutionId);
+          this.showEvolutionModal = true;
+        }
+      },
+      ocultarInfoEvolucion() {
+        this.showEvolutionModal = false;
+      },
+      async obtenerInfoPokemonEvolucion(id) {
+        try {
+          const response = await useApiStore().findPokemon(id);
+          this.evolutionInfo = response.data;
+        } catch (error) {
+          console.error('Error al obtener información de la evolución del Pokémon:', error);
+        }
+      },
       async obtenerInfoPokemon(id) {
         try {
           const response = await useApiStore().findPokemon(id);
@@ -125,40 +120,33 @@
       },
       async borrarPokemon() {
         try {
-          // Obtener el token de localStorage
+
           const token = localStorage.getItem('token');
 
-          // Verificar si hay un token antes de realizar la solicitud
           if (!token) {
             console.error('Token de autenticación no encontrado');
-            // Puedes manejar esto de acuerdo a tus necesidades, redirigir a iniciar sesión, mostrar un mensaje, etc.
             return;
           }
 
-          // Configurar los encabezados de la solicitud con el token
           const headers = {
             Authorization: `${token}`,
           };
 
-          // Hacer la solicitud con los encabezados configurados
           await useApiStore().deletePokemon(this.pokemon.numeroPokedex, headers);
           this.$router.push('/listar-pokemons');
-          // Actualizar la interfaz o redirigir después de borrar el Pokémon
         } catch (error) {
           console.error('Error al borrar el Pokémon:', error);
-          // Manejar el error, mostrar un mensaje, etc.
         }
       },
       async editarPokemon() {
         try {
-          // Obtén el ID del Pokémon desde la información actual del Pokémon
           const id = this.pokemon.numeroPokedex;
 
-          // Redirige al usuario a la ruta de edición
           this.$router.push({ name: 'editar-pokemon', params: { id } });
+
         } catch (error) {
           console.error('Error al editar el Pokémon:', error);
-          // Manejar el error, mostrar un mensaje, etc.
+
         }
       },
       logout() {
@@ -227,12 +215,12 @@
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 200;
-  /* Agrega estilos adicionales según tus necesidades */
+
 }
 .evolution-link {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
-  border: 1px solid blue; /* Agrega un borde azul */
+  border: 1px solid blue; 
 }
   </style>

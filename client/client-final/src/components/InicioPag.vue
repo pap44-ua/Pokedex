@@ -7,7 +7,6 @@
         <router-link to="/">Inicio</router-link>
         <router-link to="/listar-pokemons">Listar Pokémons</router-link>
 
-        <!-- Mostrar "Iniciar sesión" o nombre de usuario -->
         <span v-if="!loggedIn">
           <router-link to="/iniciar-sesion">Iniciar sesión</router-link>
         </span>

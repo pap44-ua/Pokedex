@@ -1,3 +1,16 @@
-Implementada la persistencia del API con base de datos, en Sqlite, con nombre pokemon.db.
-Implementado el testing automatico con postman en el archivo Tests.postman_collection.json y su enviroment NewEnvironment.postman_environment.json
-Implementado el paginado con offset en el filtrado de pokemon, en el archivo controladores.js, asociado a la ruta /pokemon/tipo/:tipo.
+-He implementado paginacion y filtrado, en mi caso se puede filtrar por tipos y se permite buscar por nombre o numero de pokedex del pokemon
+-He implementado animaciones en todos los botones
+-He implementado un router para gestionar la navegacion por la app, es el archivo router.js
+-He implementado todo lo obligatorio.
+
+Extra:
+-Dentro del listado de pokemon se le puede hacer click a cada imagen y saldra la informacion en grande
+-Dentro de la informacion si situas el raton sobre la evolucion (si tiene claro) aparecerá la informacion del pokemon evolucion
+-Dentro de la informacion de cada pokemon puedes tbn editar o borrar
+-Se puede añadir desde el listado o desde tu perfil
+-Para abrir la api uso npm run start y para el cliente npm run serve
+-Usuario de ejemplo: pau contraseña: 123
+-He validado que no se pueda añadir un pokemon sin el numero de pokedex y sin el nombre y que se para iniciar sesion pongas usuario y contraseña.
+-He implementado dos funciones nuevas en la api que no caí, obtener todos los pokemons, obtener tipos e implemente filtrado aparte de en los tipos que ya estaba tbn en obtener los pokemons.
+
+

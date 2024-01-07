@@ -95,7 +95,6 @@
           tipo2: '',
           evolucion: '',
           habilidad: '',
-          // Agrega más campos según sea necesario
         },
         showOptions: false,
       };
@@ -113,7 +112,7 @@
         try {
           const nombreOId = this.$route.params.id;
           const response = await useApiStore().findPokemon(nombreOId);
-          this.pokemonInfo = { ...response.data }; // Actualiza pokemonInfo con los datos existentes
+          this.pokemonInfo = { ...response.data }; 
         } catch (error) {
           console.error('Error al buscar el Pokémon:', error);
         }
@@ -124,14 +123,13 @@
             const token = localStorage.getItem('token');
 
             if (!token) {
-            console.error('Token de autenticación no encontrado');
-            return;
+              console.error('Token de autenticación no encontrado');
+              return;
             }
             const datosActualizados = JSON.parse(JSON.stringify(this.pokemonInfo));
 
-            // Configurar los encabezados de la solicitud con el token
             const headers = {
-            Authorization: `${token}`,
+              Authorization: `${token}`,
             };
 
             console.log('Datos actualizados:', datosActualizados);
@@ -153,7 +151,6 @@
     },
     },
     mounted() {
-      // Llama a buscarPokemonActual cuando el componente se monta
       this.buscarPokemonActual();
     },
   };

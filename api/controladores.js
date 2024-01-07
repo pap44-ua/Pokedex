@@ -332,7 +332,7 @@ function actualizarPokemon(req, res) {
 
   const values = [
     datosActualizados.nombre,
-    datosActualizados.numeroPokedex,  // Asegúrate de pasar el nuevo número de Pokédex desde el front-end
+    datosActualizados.numeroPokedex,  
     datosActualizados.pS,
     datosActualizados.atk,
     datosActualizados.def,
@@ -398,7 +398,7 @@ function borrarPokemon(req, res) {
   });
 }
 
-const ITEMS_PER_PAGE = 10; // Número de elementos por página
+const ITEMS_PER_PAGE = 10; 
 
 function obtenerTodosLosPokemons(req, res) {
   let page = parseInt(req.query.page) || 1;

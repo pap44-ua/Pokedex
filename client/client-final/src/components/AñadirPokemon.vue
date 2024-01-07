@@ -50,7 +50,6 @@
     <label>Nº de las habilidades (habilidad):</label>
     <input v-model="pokemonInfo[0].habilidad" placeholder="Nº de las habilidades (habilidad)">
       </div>
-      <!-- Botón para añadir Pokémon -->
       <button class="add-button" @click="agregarPokemon">Añadir</button>
       <div v-if="mensajeAgregado" class="success-message">
         Pokémon agregado exitosamente.
@@ -91,10 +90,8 @@ export default{
                 const headers = {
                 Authorization: `${token}`,
                 };
-            // Llama a la función addPokemon de la tienda
                 await useApiStore().addPokemon(this.pokemonInfo[0], headers);
 
-            // Restablece la información del Pokémon para futuras adiciones
                 this.pokemonInfo = [{
                     nombre: '',
                     numeroPokedex: '',
@@ -110,12 +107,10 @@ export default{
                     habilidad: '',
                 }];
 
-                // Muestra un mensaje de éxito
                 this.mensajeAgregado = true;
                 this.$router.push('/listar-pokemons');
                 } catch (error) {
                 console.error('Error al agregar el Pokémon:', error);
-                // Puedes manejar el error, mostrar un mensaje de error, etc.
                 }
         },
         },
@@ -134,7 +129,7 @@ export default{
   }
   .pokemon-container {
     flex: 1;
-    margin-left: 20px; /* Espacio entre la sección de Pokémon y la información del usuario */
+    margin-left: 20px; 
   }
 
   .pokemon-input {
@@ -142,7 +137,7 @@ export default{
   }
   .add-button {
     margin-bottom: 30px;
-    width: auto; /* Establecer el ancho automático para evitar que se vea alargado verticalmente */
+    width: auto;
   }
 
 .error-message {
